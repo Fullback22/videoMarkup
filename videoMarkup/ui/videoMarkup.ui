@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>590</width>
-    <height>449</height>
+    <width>635</width>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="groupBox_createdObject">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -146,7 +146,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="groupBox_newObject">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -324,10 +324,51 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>590</width>
+     <width>635</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="classificationMenu">
+    <property name="title">
+     <string>Классификаторы</string>
+    </property>
+    <widget class="QMenu" name="actionMenu">
+     <property name="title">
+      <string>Действие</string>
+     </property>
+     <addaction name="openActionClassifier"/>
+     <addaction name="createActionClassifier"/>
+     <addaction name="editActionClassifier"/>
+     <addaction name="saveActionClassifier"/>
+    </widget>
+    <widget class="QMenu" name="objectMenu">
+     <property name="title">
+      <string>Объект</string>
+     </property>
+     <addaction name="openObjectClassifier"/>
+     <addaction name="createObjectClassifier"/>
+     <addaction name="editObjectClassifier"/>
+     <addaction name="saveObjectClassifier"/>
+    </widget>
+    <addaction name="actionMenu"/>
+    <addaction name="objectMenu"/>
+   </widget>
+   <widget class="QMenu" name="videoMenu">
+    <property name="title">
+     <string>Видео</string>
+    </property>
+    <addaction name="openVideo"/>
+   </widget>
+   <widget class="QMenu" name="markupMenu">
+    <property name="title">
+     <string>Разметка</string>
+    </property>
+    <addaction name="createMarkup"/>
+    <addaction name="openMarkup"/>
+   </widget>
+   <addaction name="classificationMenu"/>
+   <addaction name="videoMenu"/>
+   <addaction name="markupMenu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -338,6 +379,76 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_3">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="action_6">
+   <property name="text">
+    <string>Редактировать</string>
+   </property>
+  </action>
+  <action name="openActionClassifier">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
+  <action name="createActionClassifier">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="editActionClassifier">
+   <property name="text">
+    <string>Редактировать</string>
+   </property>
+  </action>
+  <action name="saveActionClassifier">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="openObjectClassifier">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
+  <action name="createObjectClassifier">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="editObjectClassifier">
+   <property name="text">
+    <string>Редактировать</string>
+   </property>
+  </action>
+  <action name="saveObjectClassifier">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="openVideo">
+   <property name="text">
+    <string>Открыть файл</string>
+   </property>
+  </action>
+  <action name="createMarkup">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="openMarkup">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
