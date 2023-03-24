@@ -49,7 +49,6 @@ class myLabel : public QLabel
 
 	ImageFormat imageFormat{ ImageFormat::ORIGINAL };
 
-	
 	Q_OBJECT
 public:
 	explicit myLabel(QWidget *parent = 0);

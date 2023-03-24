@@ -5,6 +5,10 @@
 
 #include "Display/QtGuiDisplay.h"
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+
 class videoMarkup : public QMainWindow
 {
     Q_OBJECT
@@ -15,4 +19,8 @@ public:
 
 private:
     Ui::videoMarkupClass ui;
+    cv::VideoCapture videoFile{};
+
+protected slots:
+    void slot_loadVideo();
 };
