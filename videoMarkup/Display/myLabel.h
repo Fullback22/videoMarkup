@@ -30,7 +30,7 @@ class myLabel : public QLabel
 
 	double widthScalingCoefficient_{};
 	double heightScalingCoefficient_{};
-	double scaleds_[11]{0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5};
+	double scaleds_[11]{0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5, 0};
 	size_t activScaled_{ 4 };
 	size_t minActivScaled_{};
 	size_t maxActivScaled_{};
@@ -44,8 +44,8 @@ class myLabel : public QLabel
 	
 	int first_xPointOnLabel{};
 	int first_yPointOnLabel{};
-	int first_xPointOnImage{};
-	int first_yPointOnImage{};
+	int first_xPointOnImage{};//?????
+	int first_yPointOnImage{};//?????
 
 	ImageFormat imageFormat{ ImageFormat::ORIGINAL };
 
@@ -54,10 +54,10 @@ public:
 	explicit myLabel(QWidget *parent = 0);
 	const QPixmap& getImage() const;
 
-	void mouseMoveEvent(const QMouseEvent& evnt);
-	void mousePressEvent(const QMouseEvent& evnt);
-	void mouseReleaseEvent(const QMouseEvent& evnt);
-	void leaveEvent(const QEvent& evnt);
+	void mouseMoveEvent(QMouseEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
+	void leaveEvent(QMouseEvent* event);
 	
 	void setImage(const QPixmap& image);
 	

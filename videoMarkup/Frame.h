@@ -13,6 +13,8 @@ class Frame
 public:
     Frame();
     Frame(const cv::Mat& inputMat, const QPixmap& inputPixmap, const bool imageIsNull = false);
+    Frame(const QPixmap& inputPixmap, const bool imageIsNull = false);
+    Frame(const cv::Mat& inputMat, const bool imageIsNull = false);
     Frame(const Frame& dep);
     Frame& operator=(const Frame& drop);
     
@@ -21,6 +23,8 @@ public:
     bool frameIsNull() const;
 
     void updateFrame(const cv::Mat& newMat, const QPixmap& newPixmap);
+    void updateFrame(const cv::Mat& newMat);
+    void updateFrame(const QPixmap& newPixmap);
     void setStatusFrame(const bool isNull);
 };
 

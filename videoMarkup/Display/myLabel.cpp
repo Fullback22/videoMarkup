@@ -167,7 +167,7 @@ double myLabel::get_activScaled()
 	}
 	else
 	{
-		return scaleds_[11] * 100;
+		return scaleds_[10] * 100;
 	}
 }
 
@@ -193,44 +193,44 @@ const QPixmap& myLabel::getImage() const
 	return activImage_;
 }
 
-void myLabel::mouseMoveEvent(const QMouseEvent& evnt)
+void myLabel::mouseMoveEvent(QMouseEvent* event)
 {
-	if (evnt.x() < 0)
+	if (event->x() < 0)
 	{
 		xPoint_ = 0;
 		emit mouseLeft();
 	}
-	else if (evnt.x() > this->width())
+	else if (event->x() > this->width())
 	{
 		xPoint_ = this->width() - 1;
 		emit mouseLeft();
 	}
 	else
 	{
-		xPoint_ = evnt.x();
+		xPoint_ = event->x();
 	}
 
-	if (evnt.y() < 0)
+	if (event->y() < 0)
 	{
 		yPoint_ = 0;
 		emit mouseLeft();
 	}
-	else if (evnt.y() > this->height())
+	else if (event->y() > this->height())
 	{
 		yPoint_ = this->height() - 1;
 		emit mouseLeft();
 	}
 	else
 	{
-		yPoint_ = evnt.y();
+		yPoint_ = event->y();
 	}
 	emit mousePos();
 }
 
-void myLabel::mousePressEvent(const QMouseEvent& evnt)
+void myLabel::mousePressEvent(QMouseEvent* event)
 {
-	first_xPointOnLabel = evnt.x();
-	first_yPointOnLabel = evnt.y();
+	first_xPointOnLabel = event->x();
+	first_yPointOnLabel = event->y();
 	first_xPointOnImage = first_xPointOnLabel;
 	first_yPointOnImage = first_yPointOnLabel;
 	toImgCoordinate_(first_xPointOnImage, first_yPointOnImage);
@@ -238,12 +238,12 @@ void myLabel::mousePressEvent(const QMouseEvent& evnt)
 	emit mousePressed();
 }
 
-void myLabel::leaveEvent(const QEvent& evnt)
+void myLabel::leaveEvent(QMouseEvent* event)
 {
 	emit mouseLeft();
 }
 
-void myLabel::mouseReleaseEvent(const QMouseEvent& evnt)
+void myLabel::mouseReleaseEvent(QMouseEvent* event)
 {
 	emit mouseRelease();
 }
@@ -456,7 +456,7 @@ double myLabel::scaledPixmap(int const scaled, int &dx, int &dy)
 	}
 	else
 	{
-		return scaleds_[11] * 100;
+		return scaleds_[10] * 100;
 	}
 }
 
@@ -489,9 +489,9 @@ void myLabel::scaledPixmap()
 
 void myLabel::moveImg(int &out_dx, int &out_dy)
 {
-	int dx{ first_xPointOnImage - xPoint_ };
+	int dx{ first_xPointOnLabel - xPoint_ };
 	first_xPointOnLabel = xPoint_;
-	int dy{ first_xPointOnImage - yPoint_ };
+	int dy{ first_yPointOnLabel - yPoint_ };
 	first_yPointOnLabel = yPoint_;
 	out_dx = drawingPoint_.x() + dx;
 	out_dy = drawingPoint_.y() + dy;
@@ -560,7 +560,7 @@ QSize myLabel::getOriginalImgSize() const
 void myLabel::setAllImgScaled()
 {
 	double scal_NormImg{ (double)this->width() / (double)originalImageSize_.width() };
-	scaleds_[11] = scal_NormImg;
+	scaleds_[10] = scal_NormImg;
 	for (int i{ 0 }; i < 9; i++)
 	{
 		if (scaleds_[i] > scal_NormImg)

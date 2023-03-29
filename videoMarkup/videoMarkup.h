@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_videoMarkup.h"
+#include <qmessagebox.h>
 
 #include "Display/QtGuiDisplay.h"
 

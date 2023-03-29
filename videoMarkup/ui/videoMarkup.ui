@@ -122,6 +122,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
               <widget class="QPushButton" name="pb_deleteObject">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Удалить</string>
                </property>
@@ -204,6 +207,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QPushButton" name="pb_addObject">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>Добавить</string>
                </property>
@@ -260,6 +266,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,10">
         <item>
          <widget class="QPushButton" name="pb_previusFrame">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -289,6 +298,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pb_nextFrame">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
