@@ -42,12 +42,10 @@ class myLabel : public QLabel
 	int xPoint_{};
 	int yPoint_{};
 	
-	int first_xPointOnLabel{};
-	int first_yPointOnLabel{};
-	int first_xPointOnImage{};//?????
-	int first_yPointOnImage{};//?????
+	int first_xPoint_{};
+	int first_yPoint_{};
 
-	ImageFormat imageFormat{ ImageFormat::ORIGINAL };
+	ImageFormat imageFormat_{ ImageFormat::ORIGINAL };
 
 	Q_OBJECT
 public:
@@ -82,11 +80,9 @@ public:
 	QSize getOriginalImgSize() const;
 	void setAllImgScaled();
 	void getPointInImg(int& x, int& y);
-	void setFirstPixmapPoint(QPoint newPoint);
 	void toImgCoordinate(int &inOutX, int &inOutY, bool isContains=true);
 	void toImgCoordinate_(int &inOutX, int &inOutY, bool isContains=true);
 	QPoint getImageCoordinate(bool isContains=true);
-	QPoint getFirstImagePoint();
 	void formatImage(ImageFormat formatType = ImageFormat::ORIGINAL);
 	void update_myPixmap(const QPixmap& img);
 	double get_activScaled();

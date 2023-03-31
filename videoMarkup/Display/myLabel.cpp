@@ -109,14 +109,9 @@ QPoint myLabel::getImageCoordinate(bool isContains)
 	return QPoint(x, y);
 }
 
-QPoint myLabel::getFirstImagePoint()
-{
-	return QPoint(first_xPointOnImage, first_yPointOnImage);
-}
-
 void myLabel::formatImage(ImageFormat formatType)
 {
-	if (imageFormat == formatType)
+	if (imageFormat_ == formatType)
 	{
 
 	}
@@ -125,7 +120,6 @@ void myLabel::formatImage(ImageFormat formatType)
 		if (formatType == ImageFormat::ORIGINAL)
 		{
 			activImage_ = originalActivImage_;
-			//my_Pixmap = my_Pixmap.scaled(scaledSize);
 			delete imageBuffer_;
 			imageBuffer_ = nullptr;
 			imageBuffer_ = new QPixmap(activImage_);
@@ -140,7 +134,7 @@ void myLabel::formatImage(ImageFormat formatType)
 			imageBuffer_ = new QPixmap(QPixmap::fromImage(buferImg));
 			activImage_ = *imageBuffer_;
 		}
-		imageFormat = formatType;
+		imageFormat_ = formatType;
 	}
 }
 
@@ -229,12 +223,8 @@ void myLabel::mouseMoveEvent(QMouseEvent* event)
 
 void myLabel::mousePressEvent(QMouseEvent* event)
 {
-	first_xPointOnLabel = event->x();
-	first_yPointOnLabel = event->y();
-	first_xPointOnImage = first_xPointOnLabel;
-	first_yPointOnImage = first_yPointOnLabel;
-	toImgCoordinate_(first_xPointOnImage, first_yPointOnImage);
-
+	first_xPoint_ = event->x();
+	first_yPoint_ = event->y();
 	emit mousePressed();
 }
 
@@ -434,8 +424,8 @@ double myLabel::scaledPixmap(int const scaled, int &dx, int &dy)
 	}
 	if (imageBuffer_ != nullptr)
 	{
-		formatImage(imageFormat);
-		imageFormat = ImageFormat::ORIGINAL;
+		formatImage(imageFormat_);
+		imageFormat_ = ImageFormat::ORIGINAL;
 		if (activScaled_ != 0)
 		{
 			if (!hor_center)
@@ -482,17 +472,17 @@ void myLabel::scaledPixmap()
 	aspectRatiotMode_ = Qt::IgnoreAspectRatio;
 	if (imageBuffer_ != nullptr)
 	{	
-		formatImage(imageFormat);
-		imageFormat = ImageFormat::ORIGINAL;
+		formatImage(imageFormat_);
+		imageFormat_ = ImageFormat::ORIGINAL;
 	}
 }
 
 void myLabel::moveImg(int &out_dx, int &out_dy)
 {
-	int dx{ first_xPointOnLabel - xPoint_ };
-	first_xPointOnLabel = xPoint_;
-	int dy{ first_yPointOnLabel - yPoint_ };
-	first_yPointOnLabel = yPoint_;
+	int dx{ first_xPoint_ - xPoint_ };
+	first_xPoint_ = xPoint_;
+	int dy{ first_yPoint_ - yPoint_ };
+	first_yPoint_ = yPoint_;
 	out_dx = drawingPoint_.x() + dx;
 	out_dy = drawingPoint_.y() + dy;
 }
@@ -588,12 +578,6 @@ void myLabel::getPointInImg(int& x, int& y)
 	x = xPoint_;
 	y = yPoint_;
 	toImgCoordinate(x, y);
-}
-
-void myLabel::setFirstPixmapPoint(QPoint newPoint)
-{
-	first_xPointOnImage = newPoint.x();
-	first_yPointOnImage = newPoint.y();
 }
 
 double round(double InputNumber, int const accuracy)
