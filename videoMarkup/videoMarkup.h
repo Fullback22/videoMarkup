@@ -20,8 +20,12 @@ public:
 
 private:
     Ui::videoMarkupClass ui;
-    cv::VideoCapture videoFile{};
+    cv::VideoCapture videoFile_{};
+    size_t activFrameNumber_{ };
 
+
+    void setActivFrameNumberToForm();
 protected slots:
     void slot_loadVideo();
+    void slot_nextFrame();
 };

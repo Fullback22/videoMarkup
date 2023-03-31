@@ -6,33 +6,65 @@ videoMarkup::videoMarkup(QWidget *parent)
     ui.setupUi(this);
 
     connect(ui.openVideo, &QAction::triggered, this, &videoMarkup::slot_loadVideo);
+    connect(ui.pb_nextFrame, &QPushButton::clicked, this, &videoMarkup::slot_nextFrame);
 }
 
 videoMarkup::~videoMarkup()
 {
-    if (videoFile.isOpened())
-    {
-        videoFile.release();
-    }
+    if (videoFile_.isOpened())
+        videoFile_.release();
 }
 
-void videoMarkup::slot_loadVideo()
+void videoMarkup::setActivFrameNumberToForm()
 {
-    if (videoFile.isOpened())
+    ui.le_activFrameNumber->setReadOnly(false);
+    ui.le_activFrameNumber->setText( QString::fromStdString(std::to_string(activFrameNumber_ + 1)));
+    ui.le_activFrameNumber->setReadOnly(true);
+}
+
+void videoMarkup::slot_nextFrame()
+{
+    if (videoFile_.isOpened())
     {
-        videoFile.release();
-    }
-    QString fileName{ QFileDialog::getOpenFileName(this,tr("Open Video"), "", tr("Video Files (*.avi *.mp4)")) };
-    videoFile.open(fileName.toStdString());
-    if (videoFile.isOpened())
-    {
-        cv::Mat firstFrame{};
-        videoFile.read(firstFrame);
-        ui.widgetFrame->setActivFrame(Frame(firstFrame));
+        cv::Mat frame{};
+        videoFile_.read(frame);
+        ui.widgetFrame->updateFrame(Frame(frame));
+        ++activFrameNumber_;
     }
     else
     {
         int bufer{ QMessageBox::warning(this, "Video warning", "Video not uploaded") };
         ui.widgetFrame->setActivFrame(Frame());
+        ui.pb_nextFrame->setDisabled(true);
+        activFrameNumber_ = 0;
+    }
+    setActivFrameNumberToForm();
+}
+
+void videoMarkup::slot_loadVideo()
+{
+    QString fileName{ QFileDialog::getOpenFileName(this,tr("Open Video"), "", tr("Video Files (*.avi *.mp4)")) };
+    if (!fileName.isEmpty())
+    {
+        if (videoFile_.isOpened())
+        {
+            videoFile_.release();
+        }
+        videoFile_.open(fileName.toStdString());
+        activFrameNumber_ = 0;
+        if (videoFile_.isOpened())
+        {
+            cv::Mat firstFrame{};
+            videoFile_.read(firstFrame);
+            ui.widgetFrame->setActivFrame(Frame(firstFrame));
+            ui.pb_nextFrame->setEnabled(true);
+        }
+        else
+        {
+            int bufer{ QMessageBox::warning(this, "Video warning", "Video not uploaded") };
+            ui.widgetFrame->setActivFrame(Frame());
+            ui.pb_nextFrame->setDisabled(true);
+        }
+        setActivFrameNumberToForm();
     }
 }

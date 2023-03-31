@@ -144,13 +144,13 @@ void myLabel::update_myPixmap(const QPixmap& img)
 	originalActivImage_ = img;
 	originalImageSize_ = originalActivImage_.size();
 	scaledImageSize_ = originalImageSize_;
-	widthScalingCoefficient_ = static_cast<double>(this->width()) / originalImageSize_.width();
-	heightScalingCoefficient_ = static_cast<double>(this->height()) / originalImageSize_.height();
+	widthScalingCoefficient_ = static_cast<double>(width()) / originalImageSize_.width();
+	heightScalingCoefficient_ = static_cast<double>(height()) / originalImageSize_.height();
 	delete imageBuffer_;
 	imageBuffer_ = nullptr;
 	imageBuffer_ = new QPixmap(activImage_);
 	setAllImgScaled();
-	this->scaledPixmap();
+	scaledPixmap();
 }
 
 double myLabel::get_activScaled()
@@ -171,8 +171,8 @@ void myLabel::setImage(const QPixmap& image)
 	originalActivImage_ = image;
 	originalImageSize_ = originalActivImage_.size();
 	scaledImageSize_ = originalImageSize_;
-	widthScalingCoefficient_ = static_cast<double>(this->width()) / originalImageSize_.width();
-	heightScalingCoefficient_ = static_cast<double>(this->height()) / originalImageSize_.height();
+	widthScalingCoefficient_ = static_cast<double>(width()) / originalImageSize_.width();
+	heightScalingCoefficient_ = static_cast<double>(height()) / originalImageSize_.height();
 	delete imageBuffer_;
 	imageBuffer_ = nullptr;
 	imageBuffer_ = new QPixmap(activImage_);
@@ -338,25 +338,22 @@ void myLabel::show_partImg()
 	else
 	{
 		imageMouvePart_ = new QPixmap(imageBuffer_->copy(dx, dy, originalImageSize_.width() * bufer_scalCoef_W, originalImageSize_.height() * bufer_scalCoef_H));
-
 	}
 	int scaledMouvePixmap{ 0 };
-	if (scaledImageSize_.width() <= this->width())
+	if (scaledImageSize_.width() <= width())
 		scaledMouvePixmap = 10;
-	if (scaledImageSize_.height() <= this->height())
+	if (scaledImageSize_.height() <= height())
 		++scaledMouvePixmap;
+	
 	if (scaledMouvePixmap == 0)
-	{
-		this->setPixmap(imageMouvePart_->scaled(this->size(), aspectRatiotMode_));
-	}
+		setPixmap(imageMouvePart_->scaled(size(), aspectRatiotMode_));
 	else if (scaledMouvePixmap == 10)
-		this->setPixmap(imageMouvePart_->scaled(QSize(this->scaledImageSize_.width(), this->height()), aspectRatiotMode_));
+		setPixmap(imageMouvePart_->scaled(QSize(scaledImageSize_.width(), height()), aspectRatiotMode_));
 	else if (scaledMouvePixmap == 1)
-		this->setPixmap(imageMouvePart_->scaled(QSize(this->width(), this->scaledImageSize_.height()), aspectRatiotMode_));
+		setPixmap(imageMouvePart_->scaled(QSize(width(), scaledImageSize_.height()), aspectRatiotMode_));
 	else if (scaledMouvePixmap == 11)
 	{
-
-		this->setPixmap(imageMouvePart_->scaled(this->scaledImageSize_, aspectRatiotMode_));
+		setPixmap(imageMouvePart_->scaled(scaledImageSize_, aspectRatiotMode_));
 		scaledImageSize_ = pixmap()->size();
 	}
 	imageIsShown_ = true;
@@ -452,11 +449,11 @@ double myLabel::scaledPixmap(int const scaled, int &dx, int &dy)
 
 void myLabel::scaledPixmap()
 {
-	this->toCenterPoint(drawingPoint_);
+	toCenterPoint(drawingPoint_);
 	originalDrawingPoint_.setX(drawingPoint_.x() / scaleds_[activScaled_]);
 	originalDrawingPoint_.setY(drawingPoint_.y() / scaleds_[activScaled_]);
 
-	this->toUpLeftpoint(drawingPoint_);
+	toUpLeftpoint(drawingPoint_);
 
 	if (activScaled_ == 0)
 	{

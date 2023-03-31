@@ -180,7 +180,6 @@ void QtGuiDisplay::slot_ZoomImg_AllLabl()
 
 void QtGuiDisplay::setActivFrame(const Frame& activObj)
 {
-	this->updateGeometry();
 	frame = activObj;
  	ui.label_for_TempImg->setAlignment(Qt::AlignCenter);
 	if (frame.frameIsNull())
@@ -241,11 +240,6 @@ void QtGuiDisplay::slot_updateImg()
 	ui.label_for_TempImg->show_partImg();
 }
 
-void QtGuiDisplay::updateFrame()
-{
-	emit signal_updateFrame();
-}
-
 void QtGuiDisplay::updateFrame(const Frame& activObj)
 {
 	frame = activObj;
@@ -255,6 +249,8 @@ void QtGuiDisplay::updateFrame(const Frame& activObj)
 	ui.label_for_TempImg->show_partImg();
 	activ_scaled = ui.label_for_TempImg->get_activScaled();
 	ui.label_Scale->setText(QString::number(activ_scaled, 'f', 1) + "%");
+	if (!ui.pb_allWindow->isEnabled())
+		slot_ZoomImg_AllLabl();
 }
 
 void QtGuiDisplay::resizeEvent(QResizeEvent* event)
@@ -266,7 +262,6 @@ void QtGuiDisplay::resizeEvent(QResizeEvent* event)
 	ui.label_for_TempImg->show_partImg(dr_x, dr_y, ui.label_for_TempImg->size().width() - 1, ui.label_for_TempImg->size().height() - 1);
 	ui.horSB_forTempImg->setSliderPosition(ui.horSB_forTempImg->value() + dr_x);
 	ui.verSB_forTempImg->setSliderPosition(ui.verSB_forTempImg->value() + dr_y);
-	//ui.label_for_TempImg->getDrPoint(dr_x, dr_y);
 	ui.label_for_TempImg->getDrawingPoint();
 	ui.label_for_TempImg->setAllImgScaled();
 	if (!ui.pb_allWindow->isEnabled())

@@ -37,7 +37,6 @@ public:
 	
 	QRect getLabelRect();
 	void changeImgFormat(ImageFormat formatType);
-	void updateFrame();
 	
 	void updateFrame(const Frame& activObj);
 	void resizeEvent(QResizeEvent* event);
@@ -55,7 +54,4 @@ protected slots:
 	void slot_ZoomImg_Out();
 	void slot_ZoomImg_AllLabl();
 	void slot_updateImg();
-
-signals:
-	void signal_updateFrame();
 };
