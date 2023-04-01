@@ -28,8 +28,15 @@ void videoMarkup::slot_nextFrame()
     {
         cv::Mat frame{};
         videoFile_.read(frame);
-        ui.widgetFrame->updateFrame(Frame(frame));
-        ++activFrameNumber_;
+        if (frame.empty())
+        {
+            ui.pb_nextFrame->setDisabled(true);
+        }
+        else
+        {
+            ui.widgetFrame->updateFrame(Frame(frame));
+            ++activFrameNumber_;
+        }
     }
     else
     {
