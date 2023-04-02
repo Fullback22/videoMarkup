@@ -17,6 +17,7 @@ enum class ImageFormat
 
 class myLabel : public QLabel
 {
+protected:
 	QPixmap activImage_{};
 	QPixmap originalActivImage_{};
 	QPixmap* imageBuffer_{ nullptr };

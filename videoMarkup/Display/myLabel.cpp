@@ -155,7 +155,7 @@ void myLabel::update_myPixmap(const QPixmap& img)
 
 double myLabel::get_activScaled()
 {
-	if (activScaled_ < 11 && activScaled_ > 0)
+	if (activScaled_ < 10 && activScaled_ > 0)
 	{
 		return scaleds_[activScaled_] * 100;
 	}

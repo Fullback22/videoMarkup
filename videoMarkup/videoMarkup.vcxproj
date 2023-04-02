@@ -92,6 +92,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Figure\FigureRectangle.cpp" />
+    <ClCompile Include="Figure\IFigure.cpp" />
     <ClCompile Include="Frame.cpp" />
     <QtRcc Include="videoMarkup.qrc" />
     <QtMoc Include="videoMarkup.h" />
@@ -111,6 +113,8 @@
     <QtMoc Include="Display\QtGuiDisplay.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Figure\FigureRectangle.h" />
+    <ClInclude Include="Figure\IFigure.h" />
     <ClInclude Include="Frame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

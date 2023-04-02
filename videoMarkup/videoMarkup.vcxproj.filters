@@ -24,6 +24,9 @@
     <Filter Include="Display">
       <UniqueIdentifier>{dcda32d4-0ce4-4fc8-97de-ad5f294257cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Figure">
+      <UniqueIdentifier>{ea9184fe-70f5-4332-aed2-d06229c43b75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="videoMarkup.qrc">
@@ -49,6 +52,12 @@
     <ClCompile Include="Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Figure\IFigure.cpp">
+      <Filter>Figure</Filter>
+    </ClCompile>
+    <ClCompile Include="Figure\FigureRectangle.cpp">
+      <Filter>Figure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\QtGuiDisplay.ui">
@@ -69,6 +78,12 @@
   <ItemGroup>
     <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Figure\IFigure.h">
+      <Filter>Figure</Filter>
+    </ClInclude>
+    <ClInclude Include="Figure\FigureRectangle.h">
+      <Filter>Figure</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
