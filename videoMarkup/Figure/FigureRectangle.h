@@ -1,7 +1,6 @@
 #pragma once
 #include "IFigure.h"
-class FigureRectangle :
-    protected IFigure
+class FigureRectangle : protected IFigure
 {
 private:
     float x_{};
@@ -14,8 +13,8 @@ private:
 
     QPen pen_{ QBrush{Qt::red}, 1 };
 
-    FigureRectangle() {};
 protected:
+    FigureRectangle() {};
     ~FigureRectangle() {};
     void Delete() override;
     void draw(QPixmap& background) const override;
@@ -38,7 +37,7 @@ protected:
     void resizeByUpperRight(const float dx, const float dy);
     void resizeByBottomLeft(const float dx, const float dy);
     void resizeByBottomRight(const float dx, const float dy);
-     
+
     void move(const float dx, const float dy);
 
     void setRectangle(float const x, float const y, float const width, float const heidth);
@@ -50,4 +49,3 @@ protected:
 
     friend IFigure* IFigure::CreateInstance();
 };
-

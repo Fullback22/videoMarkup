@@ -17,15 +17,12 @@ class QtGuiDisplay : public QWidget
 {
 	Q_OBJECT
 
-	QCursor cursorType{};
-	Frame frame{};
+	Frame frame_{};
 	
-	double activ_scaled{};
-	double hor_scaled{};
-	double vert_scaled{}; 
+	double activScaled_{};
 
-	bool isZoomNow{ false };
-	bool event_img{ false };
+	bool isZoomNow_{ false };
+	bool moveImage{ false };
 
 public:
 	QtGuiDisplay(QWidget *parent = Q_NULLPTR);
@@ -48,7 +45,6 @@ protected slots:
 	void slot_mouvePixmap();
 	void slot_mouseCurrentPos();
 	void slot_mousePressed();
-	void slot_mouseLeft();
 	void slot_mouseRelease();
 	void slot_ZoomImg_In();
 	void slot_ZoomImg_Out();
