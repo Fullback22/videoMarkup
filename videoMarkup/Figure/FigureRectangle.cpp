@@ -123,6 +123,99 @@ float FigureRectangle::getArea() const
 	return width_ * heidth_;
 }
 
+void FigureRectangle::resizeByUpperCenter(const float dy)
+{
+	y_ += dy;
+	heidth_ -= dy;
+	if (heidth_ < 1.0)
+		heidth_ = 1.0;
+}
+
+void FigureRectangle::resizeByBottomCenter(const float dy)
+{
+	heidth_ += dy;
+	if (heidth_ < 1.0)
+		heidth_ = 1.0;
+}
+
+void FigureRectangle::resizeByLeftCenter(const float dx)
+{
+	x_ += dx;
+	width_ -= dx;
+	if (width_ < 1.0)
+		width_ = 1.0;
+}
+
+void FigureRectangle::resizeByRightCenter(const float dx)
+{
+	width_ += dx;
+	if (width_ < 1.0)
+		width_ = 1.0;
+}
+
+void FigureRectangle::resizeByUpperLeft(const float dx, const float dy)
+{
+	resizeByLeftCenter(dx);
+	resizeByUpperCenter(dy);
+}
+
+void FigureRectangle::resizeByUpperRight(const float dx, const float dy)
+{
+	resizeByRightCenter(dx);
+	resizeByUpperCenter(dy);
+}
+
+void FigureRectangle::resizeByBottomLeft(const float dx, const float dy)
+{
+	resizeByLeftCenter(dx);
+	resizeByBottomCenter(dy);
+}
+
+void FigureRectangle::resizeByBottomRight(const float dx, const float dy)
+{
+	resizeByRightCenter(dx);
+	resizeByBottomCenter(dy);
+}
+
+void FigureRectangle::move(const float dx, const float dy)
+{
+	x_ -= dx;
+	y_ -= dy;
+}
+
+void FigureRectangle::setRectangle(float const x, float const y, float const width, float const heidth)
+{
+	if (width < 1.0 || heidth < 1.0)
+		throw "incorect size";
+	else
+	{
+		x_ = x;
+		y_ = y;
+		width_ = width;
+		heidth_ = heidth;
+	}
+}
+
+float FigureRectangle::getX() const
+{
+	return x_;
+}
+
+float FigureRectangle::getY() const
+{
+	return y_;
+}
+
+float FigureRectangle::getWidth() const
+{
+	return width_;
+}
+
+float FigureRectangle::getHeidth() const
+{
+	return heidth_;
+}
+
 IFigure* IFigure::CreateInstance()
 {
 	return static_cast<IFigure*>(new FigureRectangle());

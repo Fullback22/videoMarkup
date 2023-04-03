@@ -6,8 +6,8 @@ class FigureRectangle :
 private:
     float x_{};
     float y_{};
-    float width_{};
-    float heidth_{};
+    float width_{ 1.0 };
+    float heidth_{ 1.0 };
 
     float deltaInsideBorder_{ 0 };
     float deltaOutsideBorder_{ 5.0 };
@@ -29,6 +29,24 @@ protected:
     bool isRightCenterBorder(const QPoint& point) const override;
     bool isLeftCenterBorder(const QPoint& point) const override;
     float getArea() const override;
+
+    void resizeByUpperCenter(const float dy);
+    void resizeByBottomCenter(const float dy);
+    void resizeByLeftCenter(const float dx);
+    void resizeByRightCenter(const float dx);
+    void resizeByUpperLeft(const float dx, const float dy);
+    void resizeByUpperRight(const float dx, const float dy);
+    void resizeByBottomLeft(const float dx, const float dy);
+    void resizeByBottomRight(const float dx, const float dy);
+     
+    void move(const float dx, const float dy);
+
+    void setRectangle(float const x, float const y, float const width, float const heidth);
+
+    float getX() const;
+    float getY() const;
+    float getWidth() const;
+    float getHeidth() const;
 
     friend IFigure* IFigure::CreateInstance();
 };
