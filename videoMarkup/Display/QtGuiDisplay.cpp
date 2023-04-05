@@ -53,7 +53,7 @@ void QtGuiDisplay::setSizeScrollBar()
 void QtGuiDisplay::slot_mouvePixmap()
 {
 	if (ui.pb_allWindow->isEnabled())
-		ui.label_for_TempImg->show_partImg(ui.horSB_forTempImg->value(), ui.verSB_forTempImg->value(), ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage(ui.horSB_forTempImg->value(), ui.verSB_forTempImg->value(), ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
 }
 
 void QtGuiDisplay::slot_mouseCurrentPos()
@@ -86,7 +86,7 @@ void QtGuiDisplay::slot_ZoomImg_In()
 	{
 		isZoomNow_ = true;
 		int dr_x, dr_y;
-		activScaled_ = ui.label_for_TempImg->scaledPixmap(1, dr_x, dr_y);
+		activScaled_ = ui.label_for_TempImg->scaledImage(1, dr_x, dr_y);
 		if (activScaled_ == 500)
 		{
 			ui.pb_zoomIncress->setEnabled(false);
@@ -98,13 +98,13 @@ void QtGuiDisplay::slot_ZoomImg_In()
 		ui.label_Scale->setText(QString::number(activScaled_) + "%");
 		ui.pb_zoomDeduce->setEnabled(true);
 		this->setSizeScrollBar();
-		ui.label_for_TempImg->scaledPixmap();
+		ui.label_for_TempImg->scaledImage();
 		this->setSizeScrollBar();
 		ui.horSB_forTempImg->setValue(dr_x);
 		ui.verSB_forTempImg->setValue(dr_y);
 		if (!ui.pb_allWindow->isEnabled())
 			ui.pb_allWindow->setEnabled(true);
-		ui.label_for_TempImg->show_partImg(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
 		isZoomNow_ = false;
 	}
 }
@@ -136,7 +136,7 @@ void QtGuiDisplay::slot_ZoomImg_Out()
 		ui.verSB_forTempImg->setValue(dr_y);
 		if (!ui.pb_allWindow->isEnabled())
 			ui.pb_allWindow->setEnabled(true);
-		ui.label_for_TempImg->show_partImg(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
 		isZoomNow_ = false;
 	}
 }
@@ -153,8 +153,8 @@ void QtGuiDisplay::slot_ZoomImg_AllLabl()
 		int minScaled{};
 		activScaled_ = ui.label_for_TempImg->scaledPixmap(0, maxScaled, minScaled);
 		ui.label_Scale->setText(QString::number(activScaled_, 'f', 1) + "%");
-		maxScaled = ui.label_for_TempImg->getMaxScaled();
-		minScaled = ui.label_for_TempImg->getMinScaled();
+		//maxScaled = ui.label_for_TempImg->getMaxScaled();
+		//minScaled = ui.label_for_TempImg->getMinScaled();
 		
 		if (maxScaled < 10)
 			ui.pb_zoomIncress->setEnabled(true);
@@ -165,7 +165,7 @@ void QtGuiDisplay::slot_ZoomImg_AllLabl()
 		else
 			ui.pb_zoomDeduce->setEnabled(false);
 		ui.pb_allWindow->setEnabled(false);
-		ui.label_for_TempImg->show_partImg(0, 0, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage(0, 0, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
 		isZoomNow_ = false;
 	}
 }
@@ -229,7 +229,7 @@ void QtGuiDisplay::changeImgFormat(ImageFormat formatType)
 
 void QtGuiDisplay::slot_updateImg()
 {
-	ui.label_for_TempImg->show_partImg();
+	ui.label_for_TempImg->showPartImage();
 }
 
 void QtGuiDisplay::updateFrame(const Frame& activObj)
@@ -238,8 +238,8 @@ void QtGuiDisplay::updateFrame(const Frame& activObj)
 	ui.label_for_TempImg->updateImage(activObj.getPixmap());
 
 	this->setSizeScrollBar();
-	ui.label_for_TempImg->show_partImg();
-	activScaled_ = ui.label_for_TempImg->get_activScaled();
+	ui.label_for_TempImg->showPartImage();
+	activScaled_ = ui.label_for_TempImg->getImageScaled();
 	ui.label_Scale->setText(QString::number(activScaled_, 'f', 1) + "%");
 	if (!ui.pb_allWindow->isEnabled())
 		slot_ZoomImg_AllLabl();
@@ -251,7 +251,7 @@ void QtGuiDisplay::resizeEvent(QResizeEvent* event)
 	ui.verSB_forTempImg->hide();
 	int dr_x{ui.label_for_TempImg->getOldSize().width() - ui.label_for_TempImg->size().width() };
 	int dr_y{ ui.label_for_TempImg->getOldSize().height() - ui.label_for_TempImg->size().height() };
-	ui.label_for_TempImg->show_partImg(dr_x, dr_y, ui.label_for_TempImg->size().width() - 1, ui.label_for_TempImg->size().height() - 1);
+	ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->size().width() - 1, ui.label_for_TempImg->size().height() - 1);
 	ui.horSB_forTempImg->setSliderPosition(ui.horSB_forTempImg->value() + dr_x);
 	ui.verSB_forTempImg->setSliderPosition(ui.verSB_forTempImg->value() + dr_y);
 	ui.label_for_TempImg->getDrawingPoint();
