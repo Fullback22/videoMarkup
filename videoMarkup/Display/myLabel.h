@@ -54,8 +54,6 @@ public:
 	void updateImage(const QPixmap& img);
 	
 	void setImageScale(double const scale);
-
-	//void showPartImage(int xPart, int yPart, int const widthPart, int const heightPart);
 	void showPartImage();
 	
 	QPoint getDrawingPoint() const;
