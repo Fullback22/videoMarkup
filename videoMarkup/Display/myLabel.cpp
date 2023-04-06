@@ -21,7 +21,7 @@ void myLabel::setImage(const QPixmap& image)
 	imageBuffer_ = image.copy();
 	setPixmap(imageBuffer_);
 	setNormalImageScaled();
-	imageScale_ = 1.0;
+	imageScale_ = normalImageScale_;
 }
 
 void myLabel::updateImage(const QPixmap& image)
@@ -34,10 +34,10 @@ void myLabel::updateImage(const QPixmap& image)
 	heightScalingCoefficient_ = static_cast<double>(height()) / originalImageSize_.height();
 	imageBuffer_ = curentImage_.copy();
 	setNormalImageScaled();
-	scaledImage(imageScale_);
+	setImageScale(imageScale_);
 }
 
-void myLabel::scaledImage(double const scale)
+void myLabel::setImageScale(double const scale)
 {
 	double scaleRation{ scale / imageScale_ };
 	drawingPoint_.setX(drawingPoint_.x() * scaleRation);

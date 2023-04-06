@@ -19,14 +19,17 @@ enum class ImageFormat
 class myLabel : public QLabel
 {
 protected:
-	QPixmap curentImage_{};
 	QPixmap originalImage_{};
+	QPixmap curentImage_{};
 	QPixmap imageBuffer_{};
-
-	QPoint drawingPoint_{ 0,0 };
+	
 	QSize originalImageSize_{};
+	QPoint drawingPoint_{ 0,0 };
+	QSize drawingSize_{};
 	QSize scaledImageSize_{};
+	
 	QSize previousImageSize_{};
+	
 
 	double widthScalingCoefficient_{};
 	double heightScalingCoefficient_{};
@@ -50,9 +53,9 @@ public:
 	void setImage(const QPixmap& image);
 	void updateImage(const QPixmap& img);
 	
-	void scaledImage(double const scale);
+	void setImageScale(double const scale);
 
-	void showPartImage(int xPart, int yPart, int const widthPart, int const heightPart);
+	//void showPartImage(int xPart, int yPart, int const widthPart, int const heightPart);
 	void showPartImage();
 	
 	QPoint getDrawingPoint() const;

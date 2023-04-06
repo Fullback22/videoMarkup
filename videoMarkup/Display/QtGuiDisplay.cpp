@@ -53,7 +53,7 @@ void QtGuiDisplay::setSizeScrollBar()
 void QtGuiDisplay::slot_mouvePixmap()
 {
 	if (ui.pb_allWindow->isEnabled())
-		ui.label_for_TempImg->showPartImage(ui.horSB_forTempImg->value(), ui.verSB_forTempImg->value(), ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage();
 }
 
 void QtGuiDisplay::slot_mouseCurrentPos()
@@ -86,7 +86,7 @@ void QtGuiDisplay::slot_ZoomImg_In()
 	{
 		isZoomNow_ = true;
 		int dr_x, dr_y;
-		activScaled_ = ui.label_for_TempImg->scaledImage(1, dr_x, dr_y);
+		ui.label_for_TempImg->setImageScale(1);
 		if (activScaled_ == 500)
 		{
 			ui.pb_zoomIncress->setEnabled(false);
@@ -98,13 +98,13 @@ void QtGuiDisplay::slot_ZoomImg_In()
 		ui.label_Scale->setText(QString::number(activScaled_) + "%");
 		ui.pb_zoomDeduce->setEnabled(true);
 		this->setSizeScrollBar();
-		ui.label_for_TempImg->scaledImage();
+		ui.label_for_TempImg->setImageScale(1);
 		this->setSizeScrollBar();
 		ui.horSB_forTempImg->setValue(dr_x);
 		ui.verSB_forTempImg->setValue(dr_y);
 		if (!ui.pb_allWindow->isEnabled())
 			ui.pb_allWindow->setEnabled(true);
-		ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage();
 		isZoomNow_ = false;
 	}
 }
@@ -117,7 +117,7 @@ void QtGuiDisplay::slot_ZoomImg_Out()
 		ui.horSB_forTempImg->hide();
 		ui.verSB_forTempImg->hide();
 		int dr_x, dr_y;
-		activScaled_ = ui.label_for_TempImg->scaledPixmap(-1, dr_x, dr_y);
+		ui.label_for_TempImg->setImageScale(-1);
 		if (activScaled_ == 25)
 		{
 			ui.pb_zoomDeduce->setEnabled(false);
@@ -130,13 +130,13 @@ void QtGuiDisplay::slot_ZoomImg_Out()
 		ui.label_Scale->setText(QString::number(activScaled_, 'f', 1) + "%");
 		ui.pb_zoomIncress->setEnabled(true);
 		this->setSizeScrollBar();
-		ui.label_for_TempImg->scaledPixmap();
+		ui.label_for_TempImg->setImageScale(1);
 		this->setSizeScrollBar();
 		ui.horSB_forTempImg->setValue(dr_x);
 		ui.verSB_forTempImg->setValue(dr_y);
 		if (!ui.pb_allWindow->isEnabled())
 			ui.pb_allWindow->setEnabled(true);
-		ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage();
 		isZoomNow_ = false;
 	}
 }
@@ -151,7 +151,7 @@ void QtGuiDisplay::slot_ZoomImg_AllLabl()
 		this->updateGeometry();
 		int maxScaled{};
 		int minScaled{};
-		activScaled_ = ui.label_for_TempImg->scaledPixmap(0, maxScaled, minScaled);
+		ui.label_for_TempImg->setImageScale(0);
 		ui.label_Scale->setText(QString::number(activScaled_, 'f', 1) + "%");
 		//maxScaled = ui.label_for_TempImg->getMaxScaled();
 		//minScaled = ui.label_for_TempImg->getMinScaled();
@@ -165,7 +165,7 @@ void QtGuiDisplay::slot_ZoomImg_AllLabl()
 		else
 			ui.pb_zoomDeduce->setEnabled(false);
 		ui.pb_allWindow->setEnabled(false);
-		ui.label_for_TempImg->showPartImage(0, 0, ui.label_for_TempImg->width(), ui.label_for_TempImg->height());
+		ui.label_for_TempImg->showPartImage();
 		isZoomNow_ = false;
 	}
 }
@@ -251,11 +251,10 @@ void QtGuiDisplay::resizeEvent(QResizeEvent* event)
 	ui.verSB_forTempImg->hide();
 	int dr_x{ui.label_for_TempImg->getOldSize().width() - ui.label_for_TempImg->size().width() };
 	int dr_y{ ui.label_for_TempImg->getOldSize().height() - ui.label_for_TempImg->size().height() };
-	ui.label_for_TempImg->showPartImage(dr_x, dr_y, ui.label_for_TempImg->size().width() - 1, ui.label_for_TempImg->size().height() - 1);
+	ui.label_for_TempImg->showPartImage();
 	ui.horSB_forTempImg->setSliderPosition(ui.horSB_forTempImg->value() + dr_x);
 	ui.verSB_forTempImg->setSliderPosition(ui.verSB_forTempImg->value() + dr_y);
 	ui.label_for_TempImg->getDrawingPoint();
-	ui.label_for_TempImg->setNormalImageScaled();
 	if (!ui.pb_allWindow->isEnabled())
 		slot_ZoomImg_AllLabl();
 	else
