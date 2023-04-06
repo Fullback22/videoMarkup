@@ -14,7 +14,7 @@ void myLabel::setImage(const QPixmap& image)
 	originalImage_ = image.copy();
 	originalImageSize_ = originalImage_.size();
 	scaledImageSize_ = originalImageSize_;
-
+	drawingSize_ = size();
 	widthScalingCoefficient_ = static_cast<double>(width()) / originalImageSize_.width();
 	heightScalingCoefficient_ = static_cast<double>(height()) / originalImageSize_.height();
 
@@ -39,13 +39,95 @@ void myLabel::updateImage(const QPixmap& image)
 
 void myLabel::setImageScale(double const scale)
 {
-	double scaleRation{ scale / imageScale_ };
-	drawingPoint_.setX(drawingPoint_.x() * scaleRation);
-	drawingPoint_.setY(drawingPoint_.y() * scaleRation);
+
 
 	imageScale_ = scale;
 	scaledImageSize_.setWidth(originalImageSize_.width() * imageScale_);
 	scaledImageSize_.setHeight(originalImageSize_.height() * imageScale_);
+	QSize buferForDrawingSize{ drawingSize_ };
+	drawingSize_.setWidth(width() / imageScale_);
+	drawingSize_.setHeight(height() / imageScale_);
+	buferForDrawingSize -= drawingSize_;
+	drawingPoint_.setX(drawingPoint_.x() + buferForDrawingSize.width() / 2);
+	drawingPoint_.setY(drawingPoint_.y() + buferForDrawingSize.height() / 2);
+}
+
+void myLabel::showPartImage(int xPart, int yPart, int const widthPart, int const heightPart)
+{
+	if (xPart < 0)
+		xPart = 0;
+	else if (xPart >= (scaledImageSize_.width() - widthPart))
+		xPart = scaledImageSize_.width() - widthPart;
+	if (yPart < 0)
+		yPart = 0;
+	else if (yPart >= (scaledImageSize_.height() - heightPart))
+		yPart = scaledImageSize_.height() - heightPart;
+
+	drawingPoint_.setX(xPart);
+	drawingPoint_.setY(yPart);
+
+	double buferForScaleByWidth{ static_cast<double>(originalImageSize_.width()) / scaledImageSize_.width() };
+
+	xPart *= buferForScaleByWidth;
+	buferForScaleByWidth *= widthScalingCoefficient_;
+
+	double buferForScaleByHeigth{ static_cast<double>(originalImageSize_.height()) / scaledImageSize_.height() };
+
+	yPart *= buferForScaleByHeigth;
+	buferForScaleByHeigth *= heightScalingCoefficient_;
+	QPixmap imageMouvePart{};
+	if (imageBuffer_.isNull())
+		imageMouvePart = curentImage_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
+	else
+		imageMouvePart = imageBuffer_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
+
+	QSize scaledSize{ size() };
+
+	if (scaledImageSize_.width() <= width())
+		scaledSize.setWidth(scaledImageSize_.width());
+	if (scaledImageSize_.height() <= height())
+		scaledSize.setHeight(scaledImageSize_.height());
+
+	setPixmap(imageMouvePart.scaled(scaledSize, aspectRatiotMode_));
+	imageIsShown_ = true;
+
+	//if (scaledImageSize_.width() <= width() && scaledImageSize_.height() <= height())
+		//scaledImageSize_ = pixmap()->size();
+}
+
+void myLabel::showPartImage()
+{
+	int xPart{ drawingPoint_.x() };
+	int yPart{ drawingPoint_.y() };
+
+	double buferForScaleByWidth{ static_cast<double>(originalImageSize_.width()) / scaledImageSize_.width() };
+
+	xPart *= buferForScaleByWidth;
+	buferForScaleByWidth *= widthScalingCoefficient_;
+
+	double buferForScaleByHeigth{ static_cast<double>(originalImageSize_.height()) / scaledImageSize_.height() };
+
+	yPart *= buferForScaleByHeigth;
+	buferForScaleByHeigth *= heightScalingCoefficient_;
+
+	QPixmap imageMouvePart{};
+	if (imageBuffer_.isNull())
+	{
+		imageMouvePart = curentImage_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
+	}
+	else
+	{
+		imageMouvePart = imageBuffer_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
+	}
+
+	QSize scaledSize{ size() };
+	if (scaledImageSize_.width() <= width())
+		scaledSize.setWidth(scaledImageSize_.width());
+	if (scaledImageSize_.height() <= height())
+		scaledSize.setHeight(scaledImageSize_.height());
+
+	setPixmap(imageMouvePart.scaled(scaledSize, aspectRatiotMode_));
+	imageIsShown_ = true;
 }
 
 void myLabel::toImgCoordinate(int &inOutX, int &inOutY, bool isContains)
@@ -257,83 +339,7 @@ void myLabel::drawPicture(const cv::Mat& drawPicture, const QRect& limitRect)
 	delete painter;
 }
 
-void myLabel::showPartImage(int xPart, int yPart, int const widthPart, int const heightPart)
-{
-	if (xPart < 0)
-		xPart = 0;
-	else if (xPart >= (scaledImageSize_.width() - widthPart))
-		xPart = scaledImageSize_.width() - widthPart;
-	if (yPart < 0)
-		yPart = 0;
-	else if (yPart >= (scaledImageSize_.height() - heightPart))
-		yPart = scaledImageSize_.height() - heightPart;
 
-	drawingPoint_.setX(xPart);
-	drawingPoint_.setY(yPart);
-	
-	double buferForScaleByWidth{ static_cast<double>(originalImageSize_.width()) / scaledImageSize_.width() };
-	
-	xPart *= buferForScaleByWidth;
-	buferForScaleByWidth *= widthScalingCoefficient_;
-	
-	double buferForScaleByHeigth{ static_cast<double>(originalImageSize_.height()) / scaledImageSize_.height() };
-	
-	yPart *= buferForScaleByHeigth;
-	buferForScaleByHeigth *= heightScalingCoefficient_;
-	QPixmap imageMouvePart{};
-	if (imageBuffer_.isNull())
-		imageMouvePart = curentImage_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
-	else
-		imageMouvePart = imageBuffer_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
-	
-	QSize scaledSize{ size() };
-
-	if (scaledImageSize_.width() <= width())
-		scaledSize.setWidth(scaledImageSize_.width());
-	if (scaledImageSize_.height() <= height())
-		scaledSize.setHeight(scaledImageSize_.height());
-	
-	setPixmap(imageMouvePart.scaled(scaledSize, aspectRatiotMode_));
-	imageIsShown_ = true;
-	
-	//if (scaledImageSize_.width() <= width() && scaledImageSize_.height() <= height())
-		//scaledImageSize_ = pixmap()->size();
-}
-
-void myLabel::showPartImage()
-{
-	int xPart{ drawingPoint_.x() };
-	int yPart{ drawingPoint_.y() };
-
-	double buferForScaleByWidth{ static_cast<double>(originalImageSize_.width()) / scaledImageSize_.width() };
-
-	xPart *= buferForScaleByWidth;
-	buferForScaleByWidth *= widthScalingCoefficient_;
-
-	double buferForScaleByHeigth{ static_cast<double>(originalImageSize_.height()) / scaledImageSize_.height() };
-
-	yPart *= buferForScaleByHeigth;
-	buferForScaleByHeigth *= heightScalingCoefficient_;
-
-	QPixmap imageMouvePart{};
-	if (imageBuffer_.isNull())
-	{
-		imageMouvePart = curentImage_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
-	}
-	else
-	{
-		imageMouvePart = imageBuffer_.copy(xPart, yPart, originalImageSize_.width() * buferForScaleByWidth, originalImageSize_.height() * buferForScaleByHeigth);
-	}
-
-	QSize scaledSize{ size() };
-	if (scaledImageSize_.width() <= width())
-		scaledSize.setWidth(scaledImageSize_.width());
-	if (scaledImageSize_.height() <= height())
-		scaledSize.setHeight(scaledImageSize_.height());
-
-	setPixmap(imageMouvePart.scaled(scaledSize, aspectRatiotMode_));
-	imageIsShown_ = true;
-}
 
 
 
