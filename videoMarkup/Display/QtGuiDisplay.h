@@ -16,14 +16,18 @@
 class QtGuiDisplay : public QWidget
 {
 	Q_OBJECT
-
+protected:
 	Frame frame_{};
 	
-	double activScaled_{};
-
+	float scale_[10]{ 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 };
+	size_t activScale_{ 0 };
+	size_t scaleFollowingNormalScale_{ 10 };
+	size_t scalePreviousToNormalScale_{ 0 };
+	
 	bool isZoomNow_{ false };
 	bool moveImage{ false };
 
+	void setScalesBorderingWithNormalScale();
 public:
 	QtGuiDisplay(QWidget *parent = Q_NULLPTR);
 	~QtGuiDisplay();

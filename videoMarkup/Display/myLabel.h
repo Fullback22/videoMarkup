@@ -30,9 +30,6 @@ protected:
 	
 	QSize previousImageSize_{};
 	
-
-	double widthScalingCoefficient_{};
-	double heightScalingCoefficient_{};
 	double imageScale_{ 1.0 };
 	double normalImageScale_{ 0.0 };
 
@@ -44,49 +41,45 @@ protected:
 
 	ImageFormat imageFormat_{ ImageFormat::ORIGINAL };
 
-	void setNormalImageScaled();
+	void setNormalImageScale();
 	Q_OBJECT
 public:
 	explicit myLabel(QWidget *parent = 0);
 	~myLabel();
 	
 	void setImage(const QPixmap& image);
-	void updateImage(const QPixmap& img);
+	void updateImage(const QPixmap& image);
 	
 	void setImageScale(double const scale);
 	void showPartImage();
+	void moveIamge();
 	
+	void setDrawingPoint(const QPoint& point);
+	void setFormatImage(ImageFormat formatType = ImageFormat::ORIGINAL);
+
+	void drawPicture(const cv::Mat& drawPicture, const QRect& limitRect);
+	
+	
+	void convertPointToImageCoordinate(QPoint& targetPoint) const;
 	QPoint getDrawingPoint() const;
-	void moveImg(int& out_dx, int& out_dy);
-	
+	QPoint getCursorPositionOnLabel() const;
+	QPoint getCursorPositionOnImage() const;
 
-	void toCenterPoint(QPoint &upLeftPoint);
-	void toUpLeftpoint(QPoint &centerPoint);
-	void toUpLeftpoint(int &x, int &y);
-	
-	QPoint getImagePoint() const;
-	QSize getOldSize() const;
-	QSize getScaledImgSize() const;
-	QSize getOriginalImgSize() const;
+	QSize getPreviousImageSize() const;
+	QSize getScaledImageSize() const;
+	QSize getOriginalImageSize() const;
 
-	void getPointInImg(int& x, int& y);
-	void toImgCoordinate(int &inOutX, int &inOutY, bool isContains=true);
-	void toImgCoordinate_(int &inOutX, int &inOutY, bool isContains=true);
-	QPoint getImageCoordinate(bool isContains=true);
-	void formatImage(ImageFormat formatType = ImageFormat::ORIGINAL);
-	const QPixmap& getImage() const;
+	double getImageScale() const;
+	double getNormalImageScale() const;
 	
-	double getImageScaled() const;
-	double getNormalImageScaled() const;
+	const QPixmap& getCurentImage() const;
+	const QPixmap& getOrignalImage() const;
 	
 	void mouseMoveEvent(QMouseEvent* event);
 	void mousePressEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);
 	void leaveEvent(QMouseEvent* event);
 	void resizeEvent(QResizeEvent* event);
-	
-	
-	void drawPicture(const cv::Mat& drawPicture, const QRect& limitRect);
 
 signals:
 	void mousePressed();

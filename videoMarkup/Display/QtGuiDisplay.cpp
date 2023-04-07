@@ -1,5 +1,28 @@
 #include "QtGuiDisplay.h"
 
+void QtGuiDisplay::setScalesBorderingWithNormalScale()
+{
+	float normalImageScale{ ui.label_for_TempImg->getNormalImageScale() };
+	scaleFollowingNormalScale_ = 10;
+	for (size_t i{ 1 }; i < 10; i++)
+	{
+		if (scale_[i] > normalImageScale)
+		{
+			scaleFollowingNormalScale_ = i;
+			i = 9;
+		}
+	}
+	scalePreviousToNormalScale_ = 0;
+	for (int i{ 9 }; i > 0; i--)
+	{
+		if (scale_[i] < normalImageScale)
+		{
+			scalePreviousToNormalScale_ = i;
+			i = 0;
+		}
+	}
+}
+
 QtGuiDisplay::QtGuiDisplay(QWidget *parent)
 	: QWidget(parent)
 {
@@ -190,6 +213,7 @@ void QtGuiDisplay::setActivFrame(const Frame& activObj)
 		ui.pb_allWindow->show();
 		ui.label_Scale->show();
 	}
+	scale_[0] = ui.label_for_TempImg->getNormalImageScale();
 	slot_ZoomImg_AllLabl();
 }
 
@@ -236,7 +260,8 @@ void QtGuiDisplay::updateFrame(const Frame& activObj)
 {
 	frame_ = activObj;
 	ui.label_for_TempImg->updateImage(activObj.getPixmap());
-
+	scale_[0] = ui.label_for_TempImg->getNormalImageScale();
+	
 	this->setSizeScrollBar();
 	ui.label_for_TempImg->showPartImage();
 	activScaled_ = ui.label_for_TempImg->getImageScaled();
