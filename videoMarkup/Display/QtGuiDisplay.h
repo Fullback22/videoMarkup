@@ -19,19 +19,16 @@ class QtGuiDisplay : public QWidget
 protected:
 	Frame frame_{};
 	
-	float scale_[10]{ 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 };
+	float scale_[10]{ 1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 };
 	size_t activScale_{ 0 };
 	size_t scaleFollowingNormalScale_{ 10 };
 	size_t scalePreviousToNormalScale_{ 0 };
 	
-	bool isZoomNow_{ false };
-	bool moveImage{ false };
+	bool moveImage_{ false };
 
-	void setScalesBorderingWithNormalScale();
 public:
 	QtGuiDisplay(QWidget *parent = Q_NULLPTR);
 	~QtGuiDisplay();
-	void setSizeScrollBar();
 	
 	void setActivFrame(const Frame& activObj);
 	void setEnableWidtsGrouBox(bool enable);
@@ -54,4 +51,8 @@ protected slots:
 	void slot_ZoomImg_Out();
 	void slot_ZoomImg_AllLabl();
 	void slot_updateImg();
+
+protected:
+	void setScalesBorderingWithNormalScale();
+	void setSizeScrollBar();
 };

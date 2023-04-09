@@ -2,6 +2,7 @@
 
 myLabel::myLabel(QWidget *parent) :QLabel(parent)
 {
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 
 myLabel::~myLabel()
@@ -14,14 +15,13 @@ void myLabel::setImage(const QPixmap& image)
 	originalImage_ = image.copy();
 	imageBuffer_ = image.copy();
 	
-	setNormalImageScale();
-	imageScale_ = normalImageScale_;
-	
 	originalImageSize_ = originalImage_.size();
-	scaledImageSize_ = originalImageSize_ * normalImageScale_;
+	setNormalImageScale();
+	scaledImageSize_ = originalImageSize_ * imageScale_;
 	drawingSize_ = originalImageSize_;
 
-	showPartImage();
+	coefficientRecalculationByWidth_ = originalImage_.width() / static_cast<float>(width());
+	coefficientRecalculationByHeigth_ = originalImage_.height() / static_cast<float>(height());
 }
 
 void myLabel::updateImage(const QPixmap& image)
@@ -36,7 +36,7 @@ void myLabel::updateImage(const QPixmap& image)
 	setImageScale(imageScale_);
 }
 
-void myLabel::setImageScale(double const scale)
+void myLabel::setImageScale(float const scale)
 {
 	imageScale_ = scale;
 	scaledImageSize_.setWidth(originalImageSize_.width() * imageScale_);
@@ -81,16 +81,21 @@ void myLabel::showPartImage()
 
 void myLabel::moveIamge()
 {
-	int dx{ (firstCursorPosition_.x() - cursorPosition_.x()) / imageScale_ };
-	int dy{ (firstCursorPosition_.y() - cursorPosition_.y()) / imageScale_ };
+	int dx{ static_cast<int>((firstCursorPosition_.x() - cursorPosition_.x()) / imageScale_) };
+	int dy{ static_cast<int>((firstCursorPosition_.y() - cursorPosition_.y()) / imageScale_) };
 
-	if (dx != 0)
+	QPoint newDrawingPoint{ drawingPoint_.x(), drawingPoint_.y()};
+	if (dx != 0 && scaledImageSize_.width() > width())
+	{
 		firstCursorPosition_.setX(cursorPosition_.x());
+		newDrawingPoint.setX(newDrawingPoint.x() + dx);
+	}
 
-	if (dy != 0)
+	if (dy != 0 && scaledImageSize_.height() > height())
+	{
 		firstCursorPosition_.setY(cursorPosition_.y());
-
-	QPoint newDrawingPoint{ drawingPoint_.x() + dx, drawingPoint_.y() + dy };
+		newDrawingPoint.setY(newDrawingPoint.y() + dy);
+	}
 	setDrawingPoint(newDrawingPoint);
 }
 
@@ -98,14 +103,14 @@ void myLabel::setDrawingPoint(const QPoint& point)
 {
 	if (point.x() < 0)
 		drawingPoint_.setX(0);
-	else if (point.x() >= originalImageSize_.width() - drawingSize_.width())
+	else if (point.x() >= abs(originalImageSize_.width() - drawingSize_.width()))
 		drawingPoint_.setX(originalImageSize_.width() - drawingSize_.width() - 1);
 	else
 		drawingPoint_.setX(point.x());
 
 	if (point.y() < 0)
 		drawingPoint_.setY(0);
-	else if (point.y() >= originalImageSize_.height() - drawingSize_.height())
+	else if (point.y() >= abs(originalImageSize_.height() - drawingSize_.height()))
 		drawingPoint_.setY(originalImageSize_.height() - drawingSize_.height() - 1);
 	else
 		drawingPoint_.setY(point.y());
@@ -149,7 +154,7 @@ void myLabel::drawPicture(const cv::Mat& drawPicture, const QRect& limitRect)
 
 void myLabel::convertPointToImageCoordinate(QPoint& targetPoint) const
 {
-	int outputX{ targetPoint.x() / imageScale_ };
+	int outputX{ static_cast<int>(targetPoint.x() / imageScale_) };
 	if (imageScale_ > normalImageScale_)
 	{
 		outputX += drawingPoint_.x();
@@ -165,7 +170,7 @@ void myLabel::convertPointToImageCoordinate(QPoint& targetPoint) const
 		outputX = 0;
 	targetPoint.setX(outputX);
 
-	int outputY{ targetPoint.y() / imageScale_ };
+	int outputY{ static_cast<int>(targetPoint.y() / imageScale_) };
 	if (imageScale_ > normalImageScale_)
 	{
 		outputY += drawingPoint_.y();
@@ -214,14 +219,24 @@ QSize myLabel::getOriginalImageSize() const
 	return originalImageSize_;
 }
 
-double myLabel::getImageScale() const
+float myLabel::getImageScale() const
 {
 	return imageScale_;
 }
 
-double myLabel::getNormalImageScale() const
+float myLabel::getNormalImageScale() const
 {
 	return normalImageScale_;
+}
+
+float myLabel::getCoefficientRecalculationByWidth() const
+{
+	return coefficientRecalculationByWidth_;
+}
+
+float myLabel::getCoefficientRecalculationByHeigth() const
+{
+	return coefficientRecalculationByHeigth_;
 }
 
 const QPixmap& myLabel::getCurentImage() const
@@ -235,6 +250,21 @@ const QPixmap& myLabel::getCurentImage() const
 const QPixmap& myLabel::getOrignalImage() const
 {
 	return originalImage_;
+}
+
+void myLabel::setNormalImageScale()
+{
+	float previousNormalScale{ normalImageScale_ };
+	if (originalImageSize_.width() >= originalImageSize_.height())
+		normalImageScale_ = static_cast<float>(width()) / originalImageSize_.width();
+	else
+		normalImageScale_ = static_cast<float>(height()) / originalImageSize_.height();
+	if (imageScale_ == previousNormalScale)
+	{
+		imageScale_ = normalImageScale_;
+		scaledImageSize_.setWidth(originalImageSize_.width() * imageScale_);
+		scaledImageSize_.setHeight(originalImageSize_.height() * imageScale_);
+	}
 }
 
 void myLabel::mouseMoveEvent(QMouseEvent* event)
@@ -304,20 +334,13 @@ void myLabel::resizeEvent(QResizeEvent* event)
 		drawingPoint_.setX(0);
 		drawingPoint_.setY(0);
 	}
+	coefficientRecalculationByWidth_ = originalImage_.width() / static_cast<float>(width());
+	coefficientRecalculationByHeigth_ = originalImage_.height() / static_cast<float>(height());
 }
 
-
-void myLabel::setNormalImageScale()
-{
-	if (originalImageSize_.width() >= originalImageSize_.height())
-		normalImageScale_ = static_cast<double>(width()) / originalImageSize_.width();
-	else
-		normalImageScale_ = static_cast<double>(height()) / originalImageSize_.height();
-}
-
-double round(double InputNumber, int const accuracy)
+float round(float InputNumber, int const accuracy)
 {
 	InputNumber *= pow(10, accuracy + 1);
 	InputNumber = static_cast<int>(round(InputNumber));
-	return static_cast<double>(InputNumber / pow(10, accuracy));
+	return static_cast<float>(InputNumber / pow(10, accuracy));
 }

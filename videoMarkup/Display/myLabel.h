@@ -30,9 +30,10 @@ protected:
 	
 	QSize previousImageSize_{};
 	
-	double imageScale_{ 1.0 };
-	double normalImageScale_{ 0.0 };
-
+	float imageScale_{ 1.0 };
+	float normalImageScale_{ 1.0 };
+	float coefficientRecalculationByWidth_{ 1.0 };
+	float coefficientRecalculationByHeigth_{ 1.0 };
 	bool imageIsShown_{ false };
 	
 	Qt::AspectRatioMode aspectRatiotMode_{ Qt::KeepAspectRatio };
@@ -41,7 +42,6 @@ protected:
 
 	ImageFormat imageFormat_{ ImageFormat::ORIGINAL };
 
-	void setNormalImageScale();
 	Q_OBJECT
 public:
 	explicit myLabel(QWidget *parent = 0);
@@ -50,7 +50,7 @@ public:
 	void setImage(const QPixmap& image);
 	void updateImage(const QPixmap& image);
 	
-	void setImageScale(double const scale);
+	void setImageScale(float const scale);
 	void showPartImage();
 	void moveIamge();
 	
@@ -69,23 +69,28 @@ public:
 	QSize getScaledImageSize() const;
 	QSize getOriginalImageSize() const;
 
-	double getImageScale() const;
-	double getNormalImageScale() const;
-	
+	float getImageScale() const;
+	float getNormalImageScale() const;
+	float getCoefficientRecalculationByWidth() const;
+	float getCoefficientRecalculationByHeigth() const;
+
 	const QPixmap& getCurentImage() const;
 	const QPixmap& getOrignalImage() const;
-	
-	void mouseMoveEvent(QMouseEvent* event);
-	void mousePressEvent(QMouseEvent* event);
-	void mouseReleaseEvent(QMouseEvent* event);
-	void leaveEvent(QMouseEvent* event);
-	void resizeEvent(QResizeEvent* event);
 
 signals:
 	void mousePressed();
 	void mousePos();
 	void mouseLeft();
 	void mouseRelease();
+
+protected:
+	void setNormalImageScale();
+
+	void mouseMoveEvent(QMouseEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
+	void leaveEvent(QMouseEvent* event);
+	void resizeEvent(QResizeEvent* event);
 };
 
-double round(double InputNumber, int const accuracy);
+float round(float InputNumber, int const accuracy);

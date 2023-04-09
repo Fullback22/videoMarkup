@@ -7,6 +7,7 @@ videoMarkup::videoMarkup(QWidget *parent)
 
     connect(ui.openVideo, &QAction::triggered, this, &videoMarkup::slot_loadVideo);
     connect(ui.pb_nextFrame, &QPushButton::clicked, this, &videoMarkup::slot_nextFrame);
+    ui.widgetFrame->setActivFrame(Frame());
 }
 
 videoMarkup::~videoMarkup()
