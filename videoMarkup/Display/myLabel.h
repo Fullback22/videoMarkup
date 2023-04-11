@@ -68,6 +68,7 @@ public:
 	QSize getPreviousImageSize() const;
 	QSize getScaledImageSize() const;
 	QSize getOriginalImageSize() const;
+	QSize getDrawingSize() const;
 
 	float getImageScale() const;
 	float getNormalImageScale() const;

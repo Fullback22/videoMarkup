@@ -38,6 +38,7 @@ void myLabel::updateImage(const QPixmap& image)
 
 void myLabel::setImageScale(float const scale)
 {
+	float previousScale{ imageScale_ };
 	imageScale_ = scale;
 	scaledImageSize_.setWidth(originalImageSize_.width() * imageScale_);
 	scaledImageSize_.setHeight(originalImageSize_.height() * imageScale_);
@@ -46,7 +47,11 @@ void myLabel::setImageScale(float const scale)
 	{
 		QSize buferForDrawingSize{ drawingSize_ };
 		drawingSize_.setWidth(width() / imageScale_);
+		if (drawingSize_.width() >= originalImageSize_.width())
+			drawingSize_.setWidth(originalImageSize_.width());
 		drawingSize_.setHeight(height() / imageScale_);
+		if (drawingSize_.height() >= originalImageSize_.height())
+			drawingSize_.setHeight(originalImageSize_.height());
 
 		buferForDrawingSize -= drawingSize_;
 		QPoint newDrawingPoint{ drawingPoint_.x() + buferForDrawingSize.width() / 2, drawingPoint_.y() + buferForDrawingSize.height() / 2 };
@@ -104,14 +109,14 @@ void myLabel::setDrawingPoint(const QPoint& point)
 	if (point.x() < 0)
 		drawingPoint_.setX(0);
 	else if (point.x() >= abs(originalImageSize_.width() - drawingSize_.width()))
-		drawingPoint_.setX(originalImageSize_.width() - drawingSize_.width() - 1);
+		drawingPoint_.setX(originalImageSize_.width() - drawingSize_.width() );
 	else
 		drawingPoint_.setX(point.x());
 
 	if (point.y() < 0)
 		drawingPoint_.setY(0);
 	else if (point.y() >= abs(originalImageSize_.height() - drawingSize_.height()))
-		drawingPoint_.setY(originalImageSize_.height() - drawingSize_.height() - 1);
+		drawingPoint_.setY(originalImageSize_.height() - drawingSize_.height() );
 	else
 		drawingPoint_.setY(point.y());
 }
@@ -217,6 +222,11 @@ QSize myLabel::getScaledImageSize() const
 QSize myLabel::getOriginalImageSize() const
 {
 	return originalImageSize_;
+}
+
+QSize myLabel::getDrawingSize() const
+{
+	return drawingSize_;
 }
 
 float myLabel::getImageScale() const
