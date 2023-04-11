@@ -27,8 +27,6 @@ QtGuiDisplay::~QtGuiDisplay()
 {
 }
 
-
-
 void QtGuiDisplay::slot_mouvePixmap()
 {
 	QPoint drawingPoint{ ui.horSB_forTempImg->value(), ui.verSB_forTempImg->value() };
@@ -257,10 +255,8 @@ void QtGuiDisplay::setScalesBorderingWithNormalScale()
 void QtGuiDisplay::setSizeScrollBar()
 {
 	QSize originImageSize{ ui.label_for_TempImg->getOriginalImageSize() };
-	QSize scakedImageSize{ ui.label_for_TempImg->getScaledImageSize() };
-	QSize labelForImageSize{ ui.label_for_TempImg->size() };
 	QSize drawingSize{ ui.label_for_TempImg->getDrawingSize() };
-	if (scakedImageSize.width() > labelForImageSize.width())
+	if (originImageSize.width() > drawingSize.width())
 	{
 		ui.horSB_forTempImg->show();
 		ui.horSB_forTempImg->setRange(0, originImageSize.width() - drawingSize.width());
@@ -269,7 +265,7 @@ void QtGuiDisplay::setSizeScrollBar()
 	{
 		ui.horSB_forTempImg->hide();
 	}
-	if (scakedImageSize.height() > labelForImageSize.height())
+	if (originImageSize.height() > drawingSize.height())
 	{
 		ui.verSB_forTempImg->show();
 		ui.verSB_forTempImg->setRange(0, originImageSize.height() - drawingSize.height());
