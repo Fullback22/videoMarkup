@@ -1,17 +1,13 @@
 #pragma once
 
 #include <QWidget>
+#include <qfiledialog.h>
+
 #include "ui_QtGuiDisplay.h"
-#include <QTime>
-#include "qfiledialog.h"
+
 #include "myLabel.h"
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
-#include <cmath>
-
 #include "../Frame.h"
+#include "../Figure/FigureRectangle.h"
 
 class QtGuiDisplay : public QWidget
 {
@@ -25,6 +21,9 @@ protected:
 	size_t scalePreviousToNormalScale_{ 0 };
 	
 	bool moveImage_{ false };
+	std::vector<IFigure> figuresForDrawing_;
+	size_t activFigure{};
+
 
 public:
 	QtGuiDisplay(QWidget *parent = Q_NULLPTR);
@@ -33,6 +32,8 @@ public:
 	void setActivFrame(const Frame& activObj);
 	void setEnableWidtsGrouBox(bool enable);
 	
+	void drawRectangel();
+
 	QRect getLabelRect();
 	void changeImgFormat(ImageFormat formatType);
 	

@@ -1,7 +1,8 @@
 #include "QtGuiDisplay.h"
 
-QtGuiDisplay::QtGuiDisplay(QWidget *parent)
-	: QWidget(parent)
+QtGuiDisplay::QtGuiDisplay(QWidget *parent): 
+	QWidget(parent),
+	figuresForDrawing_(0)
 {
 	ui.setupUi(this);
 
@@ -176,6 +177,11 @@ void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
 		ui.pb_allWindow->hide();
 		ui.label_Scale->hide();
 	}
+}
+
+void QtGuiDisplay::drawRectangel()
+{
+	
 }
 
 QRect QtGuiDisplay::getLabelRect()
