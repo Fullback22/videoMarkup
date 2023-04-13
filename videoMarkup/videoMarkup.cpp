@@ -19,7 +19,7 @@ videoMarkup::~videoMarkup()
 void videoMarkup::setActivFrameNumberToForm()
 {
     ui.le_activFrameNumber->setReadOnly(false);
-    ui.le_activFrameNumber->setText( QString::fromStdString(std::to_string(activFrameNumber_ + 1)));
+    ui.le_activFrameNumber->setText(QString::number(activFrameNumber_ + 1));
     ui.le_activFrameNumber->setReadOnly(true);
 }
 

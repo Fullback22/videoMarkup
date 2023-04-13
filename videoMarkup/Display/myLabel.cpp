@@ -13,7 +13,7 @@ void myLabel::setImage(const QPixmap& image)
 {
 	curentImage_ = image.copy();
 	originalImage_ = image.copy();
-	imageBuffer_ = image.copy();
+	imageWithStaticFigure_ = image.copy();
 	
 	originalImageSize_ = originalImage_.size();
 	setNormalImageScale();
@@ -31,7 +31,7 @@ void myLabel::updateImage(const QPixmap& image)
 	originalImageSize_ = originalImage_.size();
 	scaledImageSize_ = originalImageSize_;
 
-	imageBuffer_ = curentImage_.copy();
+	imageWithStaticFigure_ = curentImage_.copy();
 	setNormalImageScale();
 	setImageScale(imageScale_);
 }
@@ -68,10 +68,9 @@ void myLabel::setImageScale(float const scale)
 void myLabel::showPartImage()
 {
 	QPixmap partOfImageShown{};
-	if (imageBuffer_.isNull())
-		partOfImageShown = curentImage_.copy(drawingPoint_.x(), drawingPoint_.y(), drawingSize_.width(), drawingSize_.height());
-	else
-		partOfImageShown = imageBuffer_.copy(drawingPoint_.x(), drawingPoint_.y(), drawingSize_.width(), drawingSize_.height());
+	
+	partOfImageShown = curentImage_.copy(drawingPoint_.x(), drawingPoint_.y(), drawingSize_.width(), drawingSize_.height());
+	
 
 	QSize scaledSize{ size() };
 
@@ -128,33 +127,58 @@ void myLabel::setFormatImage(ImageFormat formatType)
 		if (formatType == ImageFormat::ORIGINAL)
 		{
 			curentImage_ = originalImage_;
-			imageBuffer_ = curentImage_.copy();
+			imageWithStaticFigure_ = curentImage_.copy();
 		}
 		else if (formatType == ImageFormat::GRAY)
 		{
 			QImage buferImg(curentImage_.toImage());
 			buferImg = buferImg.convertToFormat(QImage::Format_Grayscale8);
 			buferImg = buferImg.convertToFormat(QImage::Format_RGB32);
-			imageBuffer_ = QPixmap(QPixmap::fromImage(buferImg));
-			curentImage_ = imageBuffer_.copy();
+			imageWithStaticFigure_ = QPixmap(QPixmap::fromImage(buferImg));
+			curentImage_ = imageWithStaticFigure_.copy();
 		}
 		imageFormat_ = formatType;
 	}
 }
 
-void myLabel::drawPicture(const cv::Mat& drawPicture, const QRect& limitRect)
+void myLabel::drawPicture(const QImage& drawPicture, const QRect& limitRect)
 {
 	if (imageIsShown_)
 	{
-		imageBuffer_ = curentImage_.copy();
+		imageWithStaticFigure_ = curentImage_.copy();
 		imageIsShown_ = false;
 	}
-	QImage drPic(drawPicture.data, drawPicture.cols, drawPicture.rows, drawPicture.step, QImage::Format::Format_BGR888);
+	QImage drPic{ drawPicture.copy() };
 	if (limitRect.width() != 0)
 		drPic = drPic.scaled(limitRect.width(), limitRect.height());
-	QPainter* painter = new QPainter(&imageBuffer_);
+	QPainter* painter = new QPainter(&imageWithStaticFigure_);
 	painter->drawImage(limitRect.topLeft(), drPic);
 	delete painter;
+}
+
+void myLabel::drawStaticFigure(const IFigure& figure)
+{
+	figure.draw(imageWithStaticFigure_);
+	curentImage_ = imageWithStaticFigure_.copy();
+}
+
+void myLabel::drawStaticFigure(const std::vector<IFigure>& figures)
+{
+	for(const IFigure& figure:figures)
+		figure.draw(imageWithStaticFigure_);
+	curentImage_ = imageWithStaticFigure_.copy();
+}
+
+void myLabel::drawDynamicFigure(const IFigure& figure)
+{
+	curentImage_ = imageWithStaticFigure_.copy();
+	figure.draw(curentImage_);
+}
+
+void myLabel::clearImageFromFigure()
+{
+	curentImage_ = originalImage_.copy();
+	imageWithStaticFigure_ = originalImage_.copy();
 }
 
 void myLabel::convertPointToImageCoordinate(QPoint& targetPoint) const
@@ -251,10 +275,7 @@ float myLabel::getCoefficientRecalculationByHeigth() const
 
 const QPixmap& myLabel::getCurentImage() const
 {
-	if (imageBuffer_.isNull())
-		return curentImage_;
-	else
-		return imageBuffer_;
+	return curentImage_;
 }
 
 const QPixmap& myLabel::getOrignalImage() const

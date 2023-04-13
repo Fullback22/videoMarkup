@@ -1,13 +1,9 @@
 #pragma once
-#include "qlabel.h"
-#include <qdebug.h>
+#include <qlabel.h>
 #include <qevent.h>
 #include <qpainter.h>
-#include <cmath>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
-#include <iostream>
+
+#include"..\Figure\IFigure.h"
 
 enum class ImageFormat
 {
@@ -21,7 +17,7 @@ class myLabel : public QLabel
 protected:
 	QPixmap originalImage_{};
 	QPixmap curentImage_{};
-	QPixmap imageBuffer_{};
+	QPixmap imageWithStaticFigure_{};
 	
 	QSize originalImageSize_{};
 	QPoint drawingPoint_{ 0,0 };
@@ -57,8 +53,11 @@ public:
 	void setDrawingPoint(const QPoint& point);
 	void setFormatImage(ImageFormat formatType = ImageFormat::ORIGINAL);
 
-	void drawPicture(const cv::Mat& drawPicture, const QRect& limitRect);
-	
+	void drawPicture(const QImage& drawPicture, const QRect& limitRect);
+	void drawStaticFigure(const IFigure& figure);
+	void drawStaticFigure(const std::vector<IFigure>& figures);
+	void drawDynamicFigure(const IFigure& figure);
+	void clearImageFromFigure();
 	
 	void convertPointToImageCoordinate(QPoint& targetPoint) const;
 	QPoint getDrawingPoint() const;
