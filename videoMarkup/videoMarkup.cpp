@@ -6,6 +6,7 @@ videoMarkup::videoMarkup(QWidget *parent)
     ui.setupUi(this);
 
     connect(ui.openVideo, &QAction::triggered, this, &videoMarkup::slot_loadVideo);
+    connect(ui.createActionClassifier, &QAction::triggered, this, &videoMarkup::slot_createClassifir);
     connect(ui.pb_nextFrame, &QPushButton::clicked, this, &videoMarkup::slot_nextFrame);
     ui.widgetFrame->setActivFrame(Frame());
 }
@@ -47,6 +48,12 @@ void videoMarkup::slot_nextFrame()
         activFrameNumber_ = 0;
     }
     setActivFrameNumberToForm();
+}
+
+void videoMarkup::slot_createClassifir()
+{
+    QtGuiClassifire* newClassifire{ new QtGuiClassifire{QString::fromLocal8Bit("Действие")}};
+    newClassifire->exec();
 }
 
 void videoMarkup::slot_loadVideo()

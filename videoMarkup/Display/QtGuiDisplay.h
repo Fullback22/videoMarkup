@@ -21,7 +21,7 @@ protected:
 	size_t scalePreviousToNormalScale_{ 0 };
 	
 	bool moveImage_{ false };
-	std::vector<IFigure> figuresForDrawing_;
+	//std::vector<IFigure> figuresForDrawing_;
 	size_t activFigure{};
 
 

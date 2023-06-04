@@ -5,6 +5,7 @@
 #include <qmessagebox.h>
 
 #include "Display/QtGuiDisplay.h"
+#include "Classifire/QtGuiClassifire.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -28,4 +29,5 @@ private:
 protected slots:
     void slot_loadVideo();
     void slot_nextFrame();
+    void slot_createClassifir();
 };

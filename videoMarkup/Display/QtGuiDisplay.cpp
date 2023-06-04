@@ -1,8 +1,8 @@
 #include "QtGuiDisplay.h"
 
 QtGuiDisplay::QtGuiDisplay(QWidget *parent): 
-	QWidget(parent),
-	figuresForDrawing_(0)
+	QWidget(parent)
+	//figuresForDrawing_(0)
 {
 	ui.setupUi(this);
 

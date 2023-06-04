@@ -1,6 +1,6 @@
 #pragma once
 #include "IFigure.h"
-class FigureRectangle : protected IFigure
+class FigureRectangle : public IFigure
 {
 private:
     float x_{};
