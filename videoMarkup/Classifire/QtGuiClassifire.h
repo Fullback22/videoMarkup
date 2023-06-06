@@ -18,4 +18,7 @@ public:
 
 private:
 	Ui::QtGuiClassifireClass ui;
+
+protected slots:
+	void slot_addValue();
 };
