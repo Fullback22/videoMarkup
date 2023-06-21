@@ -27,7 +27,7 @@
     <Filter Include="Figure">
       <UniqueIdentifier>{ea9184fe-70f5-4332-aed2-d06229c43b75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classifire">
+    <Filter Include="Classifier">
       <UniqueIdentifier>{31569712-134d-4138-a4b3-5fe480fcb402}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -61,11 +61,11 @@
     <ClCompile Include="Figure\FigureRectangle.cpp">
       <Filter>Figure</Filter>
     </ClCompile>
-    <ClCompile Include="Classifire\Classifire.cpp">
-      <Filter>Classifire</Filter>
+    <ClCompile Include="Classifier\Classifier.cpp">
+      <Filter>Classifier</Filter>
     </ClCompile>
-    <ClCompile Include="Classifire\QtGuiClassifire.cpp">
-      <Filter>Classifire</Filter>
+    <ClCompile Include="Classifier\QtGuiClassifier.cpp">
+      <Filter>Classifier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,8 +75,8 @@
     <QtUic Include="ui\videoMarkup.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Classifire\QtGuiClassifire.ui">
-      <Filter>Classifire</Filter>
+    <QtUic Include="Classifier\QtGuiClassifier.ui">
+      <Filter>Classifier</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -86,8 +86,8 @@
     <QtMoc Include="Display\QtGuiDisplay.h">
       <Filter>Display</Filter>
     </QtMoc>
-    <QtMoc Include="Classifire\QtGuiClassifire.h">
-      <Filter>Classifire</Filter>
+    <QtMoc Include="Classifier\QtGuiClassifier.h">
+      <Filter>Classifier</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -100,8 +100,8 @@
     <ClInclude Include="Figure\FigureRectangle.h">
       <Filter>Figure</Filter>
     </ClInclude>
-    <ClInclude Include="Classifire\Classifire.h">
-      <Filter>Classifire</Filter>
+    <ClInclude Include="Classifier\Classifier.h">
+      <Filter>Classifier</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,24 +1,46 @@
-#include "QtGuiClassifire.h"
+#include "QtGuiClassifier.h"
 
-QtGuiClassifire::QtGuiClassifire(const QString& classifireType, QWidget *parent):
-	classifireType_{ classifireType },
+QtGuiClassifier::QtGuiClassifier(const QString& classifierType, QWidget *parent):
+	classifierType_{ classifierType },
 	QDialog{parent}
 {
 	ui.setupUi(this);
 
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("Windows-1251"));
-	setWindowTitle(QString::fromLocal8Bit("Классификатор \"") + classifireType_ + "\"" );
+	setWindowTitle(QString::fromLocal8Bit("Классификатор \"") + classifierType_ + "\"" );
 
-	connect(ui.pb_addValue, &QPushButton::clicked, this, &QtGuiClassifire::slot_addValue);
-	connect(ui.pb_removeValue, &QPushButton::clicked, this, &QtGuiClassifire::slot_removeValue);
-	connect(ui.pb_save, &QPushButton::clicked, this, &QtGuiClassifire::slot_saveClassifire);
+	connect(ui.pb_addValue, &QPushButton::clicked, this, &QtGuiClassifier::slot_addValue);
+	connect(ui.pb_removeValue, &QPushButton::clicked, this, &QtGuiClassifier::slot_removeValue);
+	connect(ui.pb_save, &QPushButton::clicked, this, &QtGuiClassifier::slot_saveClassifier);
 
 }
 
-QtGuiClassifire::~QtGuiClassifire()
+QtGuiClassifier::~QtGuiClassifier()
 {}
 
-void QtGuiClassifire::slot_removeValue()
+void QtGuiClassifier::updateClassifier(Classifier& updatedClassifire) const
+{
+	updatedClassifire.clear();
+	for (size_t i{}; i < ui.listWithValues->count(); ++i)
+		updatedClassifire.addValue(ui.listWithValues->item(i)->text().toLocal8Bit().constData());
+}
+
+void QtGuiClassifier::setClassifier(const Classifier& classifier)
+{
+	ui.listWithValues->clear();
+	for (size_t i{}; i < classifier.size(); ++i)
+	{
+		ui.listWithValues->addItem(QString::fromLocal8Bit(classifier[i].c_str()));
+		ui.listWithValues->item(i)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
+	}
+	if (ui.listWithValues->count() > 0)
+	{
+		ui.pb_removeValue->setEnabled(true);
+		ui.pb_save->setEnabled(true);
+	}
+}
+
+void QtGuiClassifier::slot_removeValue()
 {
 	int activItem{ ui.listWithValues->currentRow() };
 	ui.listWithValues->removeItemWidget(ui.listWithValues->takeItem(activItem));
@@ -29,7 +51,7 @@ void QtGuiClassifire::slot_removeValue()
 	}
 }
 
-void QtGuiClassifire::slot_saveClassifire()
+void QtGuiClassifier::slot_saveClassifier()
 {
 	bool saveClassifire{ true };
 	if (checkNotUnuqueValues())
@@ -46,20 +68,20 @@ void QtGuiClassifire::slot_saveClassifire()
 	}
 	if (saveClassifire)
 	{
-
+		emit readyToUpdateClassifier();
 		close();
 	}
 }
 
-void QtGuiClassifire::slot_canel()
+void QtGuiClassifier::slot_canel()
 {
 	close();
 }
 
-void QtGuiClassifire::slot_addValue()
+void QtGuiClassifier::slot_addValue()
 {
 	int positionNumber{ ui.listWithValues->count() };
-	ui.listWithValues->addItem(classifireType_ + QString::number(positionNumber + 1));
+	ui.listWithValues->addItem(classifierType_ + QString::number(positionNumber + 1));
 	ui.listWithValues->item(positionNumber)->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
 	if (positionNumber == 0)
 	{
@@ -68,7 +90,7 @@ void QtGuiClassifire::slot_addValue()
 	}
 }
 
-bool QtGuiClassifire::checkNotUnuqueValues()
+bool QtGuiClassifier::checkNotUnuqueValues()
 {
 	int quantityValues{ ui.listWithValues->count() };
 	QList<size_t> notUnuque{};

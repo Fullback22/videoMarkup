@@ -6,7 +6,17 @@ videoMarkup::videoMarkup(QWidget *parent)
     ui.setupUi(this);
 
     connect(ui.openVideo, &QAction::triggered, this, &videoMarkup::slot_loadVideo);
-    connect(ui.createActionClassifier, &QAction::triggered, this, &videoMarkup::slot_createClassifir);
+
+    connect(ui.createActionClassifier, &QAction::triggered, this, &videoMarkup::slot_createActionsClassifier);
+    connect(ui.editActionClassifier, &QAction::triggered, this, &videoMarkup::slot_editActionsClassifire);
+    connect(ui.saveActionClassifier, &QAction::triggered, this, &videoMarkup::slot_saveActionsClassifire);
+    connect(ui.openActionClassifier, &QAction::triggered, this, &videoMarkup::slot_loadActionsClassifire);
+
+    connect(ui.createObjectClassifier, &QAction::triggered, this, &videoMarkup::slot_createObjectClassifier);
+    connect(ui.editObjectClassifier, &QAction::triggered, this, &videoMarkup::slot_editObjectClassifier);
+    connect(ui.saveObjectClassifier, &QAction::triggered, this, &videoMarkup::slot_saveObjectClassifier);
+    connect(ui.openObjectClassifier, &QAction::triggered, this, &videoMarkup::slot_loadObjectClassifier);
+
     connect(ui.pb_nextFrame, &QPushButton::clicked, this, &videoMarkup::slot_nextFrame);
     ui.widgetFrame->setActivFrame(Frame());
 }
@@ -22,6 +32,28 @@ void videoMarkup::setActivFrameNumberToForm()
     ui.le_activFrameNumber->setReadOnly(false);
     ui.le_activFrameNumber->setText(QString::number(activFrameNumber_ + 1));
     ui.le_activFrameNumber->setReadOnly(true);
+}
+
+void videoMarkup::updateComboBoxAction()
+{
+    ui.cb_newObjectAction->clear();
+    ui.cb_odjectAction->clear();
+    for (size_t i{}; i < actionClassifier_.size(); ++i)
+    {
+        ui.cb_newObjectAction->addItem(QString::fromLocal8Bit(actionClassifier_[i].c_str()));
+        ui.cb_odjectAction->addItem(QString::fromLocal8Bit(actionClassifier_[i].c_str()));
+    }
+}
+
+void videoMarkup::updateComboBoxObject()
+{
+    ui.cb_newObjectClass->clear();
+    ui.cb_objectClass->clear();
+    for (size_t i{}; i < objectClassifier_.size(); ++i)
+    {
+        ui.cb_newObjectClass->addItem(QString::fromLocal8Bit(objectClassifier_[i].c_str()));
+        ui.cb_objectClass->addItem(QString::fromLocal8Bit(objectClassifier_[i].c_str()));
+    }
 }
 
 void videoMarkup::slot_nextFrame()
@@ -50,10 +82,94 @@ void videoMarkup::slot_nextFrame()
     setActivFrameNumberToForm();
 }
 
-void videoMarkup::slot_createClassifir()
+void videoMarkup::slot_createActionsClassifier()
 {
-    QtGuiClassifire* newClassifire{ new QtGuiClassifire{QString::fromLocal8Bit("Действие")}};
-    newClassifire->exec();
+    classifierInterfase = new QtGuiClassifier{ QString::fromLocal8Bit("Действие") };
+    connect(classifierInterfase, &QtGuiClassifier::readyToUpdateClassifier, this, &videoMarkup::slot_updateActionsClassifier);
+    classifierInterfase->exec();
+    delete classifierInterfase;
+    classifierInterfase = nullptr;
+    updateComboBoxAction();
+}
+
+void videoMarkup::slot_updateActionsClassifier()
+{
+    classifierInterfase->updateClassifier(actionClassifier_);
+}
+
+void videoMarkup::slot_editActionsClassifire()
+{
+    classifierInterfase = new QtGuiClassifier{ QString::fromLocal8Bit("Действие") };
+    connect(classifierInterfase, &QtGuiClassifier::readyToUpdateClassifier, this, &videoMarkup::slot_updateActionsClassifier);
+    classifierInterfase->setClassifier(actionClassifier_);
+    classifierInterfase->exec();
+    delete classifierInterfase;
+    classifierInterfase = nullptr;
+    updateComboBoxAction();
+}
+
+void videoMarkup::slot_saveActionsClassifire()
+{
+    QString fileName{ QFileDialog::getSaveFileName(this, tr("Save Action Classifier"), "", tr("Classifier Files (*.txt)")) };
+    if (!fileName.isEmpty())
+    {
+        actionClassifier_.getClassifier(fileName.toLocal8Bit().constData());
+    }
+}
+
+void videoMarkup::slot_loadActionsClassifire()
+{
+    QString fileName{ QFileDialog::getOpenFileName(this,tr("Open Action Classifier"), "", tr("Classifier Files (*.txt)")) };
+    if (!fileName.isEmpty())
+    {
+        actionClassifier_.setClassifier(fileName.toLocal8Bit().constData());
+        updateComboBoxAction();
+    }
+}
+
+void videoMarkup::slot_createObjectClassifier()
+{
+    classifierInterfase = new QtGuiClassifier{ QString::fromLocal8Bit("Объект") };
+    connect(classifierInterfase, &QtGuiClassifier::readyToUpdateClassifier, this, &videoMarkup::slot_updateObjectClassifier);
+    classifierInterfase->exec();
+    delete classifierInterfase;
+    classifierInterfase = nullptr;
+    updateComboBoxObject();
+}
+
+void videoMarkup::slot_updateObjectClassifier()
+{
+    classifierInterfase->updateClassifier(objectClassifier_);
+}
+
+void videoMarkup::slot_editObjectClassifier()
+{
+    classifierInterfase = new QtGuiClassifier{ QString::fromLocal8Bit("Объект") };
+    connect(classifierInterfase, &QtGuiClassifier::readyToUpdateClassifier, this, &videoMarkup::slot_updateObjectClassifier);
+    classifierInterfase->setClassifier(objectClassifier_);
+    classifierInterfase->exec();
+    delete classifierInterfase;
+    classifierInterfase = nullptr;
+    updateComboBoxObject();
+}
+
+void videoMarkup::slot_saveObjectClassifier()
+{
+    QString fileName{ QFileDialog::getSaveFileName(this, tr("Save Object Classifier"), "", tr("Classifier Files (*.txt)")) };
+    if (!fileName.isEmpty())
+    {
+        objectClassifier_.getClassifier(fileName.toLocal8Bit().constData());
+    }
+}
+
+void videoMarkup::slot_loadObjectClassifier()
+{
+    QString fileName{ QFileDialog::getOpenFileName(this,tr("Open Object Classifier"), "", tr("Classifier Files (*.txt)")) };
+    if (!fileName.isEmpty())
+    {
+        objectClassifier_.setClassifier(fileName.toLocal8Bit().constData());
+        updateComboBoxObject();
+    }
 }
 
 void videoMarkup::slot_loadVideo()

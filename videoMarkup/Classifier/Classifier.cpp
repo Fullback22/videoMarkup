@@ -1,24 +1,26 @@
-#include "Classifire.h"
+#include "Classifier.h"
 
-Classifire::Classifire():
+Classifier::Classifier():
 	values_(0)
 {
 }
 
-Classifire::~Classifire()
+Classifier::~Classifier()
 {
 }
 
-void Classifire::setClassifire(const std::string& fileName)
+void Classifier::setClassifier(const std::string& fileName)
 {
-    std::ifstream fileWithClassifire(fileName);
+    std::ifstream fileWithClassifire{ fileName };
     if (fileWithClassifire.is_open())
     {
         unsigned int quantityValues{};
         fileWithClassifire >> quantityValues;
+        fileWithClassifire.ignore();
         values_.resize(quantityValues);
         for (size_t i{}; i < quantityValues; ++i)
             getline(fileWithClassifire, values_[i]);
+        fileWithClassifire.close();
     }
     else
     {
@@ -26,12 +28,12 @@ void Classifire::setClassifire(const std::string& fileName)
     }
 }
 
-void Classifire::setClassifire(const std::vector<std::string>& values)
+void Classifier::setClassifier(const std::vector<std::string>& values)
 {
     values_.assign(values.begin(), values.end());
 }
 
-void Classifire::addValue(const std::string& newValue)
+void Classifier::addValue(const std::string& newValue)
 {
     bool isUniqueValue(true);
     for (size_t i{}; i < values_.size(); ++i)
@@ -46,7 +48,17 @@ void Classifire::addValue(const std::string& newValue)
         values_.push_back(newValue);
 }
 
-void Classifire::deleteByIndex(const size_t index)
+std::string& Classifier::operator[](size_t const pos)
+{
+    return values_[pos];
+}
+
+const std::string& Classifier::operator[](size_t const pos) const
+{
+    return values_[pos];
+}
+
+void Classifier::deleteByIndex(const size_t index)
 {
     if (index >= values_.size())
         throw(std::string{ "Out of array" });
@@ -54,7 +66,7 @@ void Classifire::deleteByIndex(const size_t index)
         values_.erase(values_.begin() + index);
 }
 
-void Classifire::deleteByName(const std::string& value)
+void Classifier::deleteByName(const std::string& value)
 {
     for (size_t i{}; i < values_.size(); ++i)
     {
@@ -66,12 +78,17 @@ void Classifire::deleteByName(const std::string& value)
     }
 }
 
-void Classifire::getClassifire(std::vector<std::string>& values) const
+void Classifier::clear()
+{
+    values_.clear();
+}
+
+void Classifier::getClassifier(std::vector<std::string>& values) const
 {
     values.assign(values_.begin(), values_.end());
 }
 
-void Classifire::getClassifire(const std::string& fileName) const
+void Classifier::getClassifier(const std::string& fileName) const
 {
     std::ofstream outFile(fileName, std::ofstream::out | std::ofstream::trunc);
     if (outFile.is_open())
@@ -79,9 +96,15 @@ void Classifire::getClassifire(const std::string& fileName) const
         outFile << values_.size() << std::endl;
         for (size_t i{ }; i < values_.size(); ++i)
             outFile << values_[i] << std::endl;
+        outFile.close();
     }
     else
     {
         throw (std::string{ "File not found" });
     }
+}
+
+size_t Classifier::size() const
+{
+    return values_.size();
 }

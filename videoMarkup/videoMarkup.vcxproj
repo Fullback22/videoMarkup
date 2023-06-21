@@ -20,7 +20,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -92,8 +92,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Classifire\Classifire.cpp" />
-    <ClCompile Include="Classifire\QtGuiClassifire.cpp" />
+    <ClCompile Include="Classifier\Classifier.cpp" />
+    <ClCompile Include="Classifier\QtGuiClassifier.cpp" />
     <ClCompile Include="Figure\FigureRectangle.cpp" />
     <ClCompile Include="Figure\IFigure.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -105,7 +105,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="Classifire\QtGuiClassifire.ui" />
+    <QtUic Include="Classifier\QtGuiClassifier.ui" />
     <QtUic Include="ui\QtGuiDisplay.ui" />
     <QtUic Include="ui\videoMarkup.ui" />
   </ItemGroup>
@@ -116,8 +116,8 @@
     <QtMoc Include="Display\QtGuiDisplay.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Classifire\Classifire.h" />
-    <QtMoc Include="Classifire\QtGuiClassifire.h" />
+    <ClInclude Include="Classifier\Classifier.h" />
+    <QtMoc Include="Classifier\QtGuiClassifier.h" />
     <ClInclude Include="Figure\FigureRectangle.h" />
     <ClInclude Include="Figure\IFigure.h" />
     <ClInclude Include="Frame.h" />
