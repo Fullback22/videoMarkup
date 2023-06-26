@@ -44,41 +44,13 @@ void QtGuiDisplay::slot_mouseCurrentPos()
 {
 	if (!frame_.frameIsNull())
 	{
-		QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
 		if (canChangesFigure_)
-		{
-			prepareForModifyFigure_ = -1;
-			cursorOnDisplay_.setShape(Qt::ArrowCursor);
-			if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
-				prepareForModifyFigure_ = getFigureIndexPrepareForModify(cursorPosition);
-
-			if (prepareForModifyFigure_ > -1)
-				cursorOnDisplay_.setShape(determenateCursorViewOnFigure(figuresForDrawing_[prepareForModifyFigure_], cursorPosition));
-
-			setCursor(cursorOnDisplay_);
-		}
+			preparationForModifyFigure();
 		else if (figureIsChanging_)
-		{
-			QSize imageSize(ui.label_for_TempImg->getOriginalImageSize());
-			if (cursorOnDisplay_.shape() == Qt::SizeVerCursor || cursorOnDisplay_.shape() == Qt::SizeHorCursor ||
-				cursorOnDisplay_.shape() == Qt::SizeBDiagCursor || cursorOnDisplay_.shape() == Qt::SizeFDiagCursor)
-			{
-				figuresForDrawing_[activFigure_]->resize(cursorPosition, imageSize);
-			}
-			else if (cursorOnDisplay_.shape() == Qt::SizeAllCursor)
-			{
-				figuresForDrawing_[activFigure_]->move(ui.label_for_TempImg->getDeltaOnImageCoordinate(), imageSize);
-			}
-			ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[activFigure_]);
-			ui.label_for_TempImg->showPartImage();
-		}
+			modifyFigure();
 		else if (canMoveImage_)
 		{
-			ui.label_for_TempImg->moveIamge();
-			QPoint drawingPoint{ ui.label_for_TempImg->getDrawingPoint() };
-			ui.horSB_forTempImg->setValue(drawingPoint.x() );
-			ui.verSB_forTempImg->setValue(drawingPoint.y() );
-			ui.label_for_TempImg->showPartImage();
+			
 		}
 	}
 }
@@ -277,6 +249,8 @@ void QtGuiDisplay::updateFrame(const Frame& activObj)
 	ui.label_for_TempImg->showPartImage();
 	if (!ui.pb_allWindow->isEnabled())
 		slot_ZoomImg_AllLabl();
+	if (frame_.frameIsNull())
+		canChangesFigure_ = false;
 }
 
 void QtGuiDisplay::resizeEvent(QResizeEvent* event)
@@ -381,4 +355,43 @@ int QtGuiDisplay::getFigureIndexPrepareForModify(const QPoint& position)
 		}
 	}
 	return smallestFigureIndex;
+}
+
+void QtGuiDisplay::modifyFigure()
+{
+	QSize imageSize(ui.label_for_TempImg->getOriginalImageSize());
+	if (cursorOnDisplay_.shape() == Qt::SizeVerCursor || cursorOnDisplay_.shape() == Qt::SizeHorCursor ||
+		cursorOnDisplay_.shape() == Qt::SizeBDiagCursor || cursorOnDisplay_.shape() == Qt::SizeFDiagCursor)
+	{
+		figuresForDrawing_[activFigure_]->resize(ui.label_for_TempImg->getCursorPositionOnImage(), imageSize);
+	}
+	else if (cursorOnDisplay_.shape() == Qt::SizeAllCursor)
+	{
+		figuresForDrawing_[activFigure_]->move(ui.label_for_TempImg->getDeltaOnImageCoordinate(), imageSize);
+	}
+	ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[activFigure_]);
+	ui.label_for_TempImg->showPartImage();
+}
+
+void QtGuiDisplay::preparationForModifyFigure()
+{
+	QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
+	prepareForModifyFigure_ = -1;
+	cursorOnDisplay_.setShape(Qt::ArrowCursor);
+	if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
+		prepareForModifyFigure_ = getFigureIndexPrepareForModify(cursorPosition);
+
+	if (prepareForModifyFigure_ > -1)
+		cursorOnDisplay_.setShape(determenateCursorViewOnFigure(figuresForDrawing_[prepareForModifyFigure_], cursorPosition));
+
+	setCursor(cursorOnDisplay_);
+}
+
+void QtGuiDisplay::moveImage()
+{
+	ui.label_for_TempImg->moveIamge();
+	QPoint drawingPoint{ ui.label_for_TempImg->getDrawingPoint() };
+	ui.horSB_forTempImg->setValue(drawingPoint.x());
+	ui.verSB_forTempImg->setValue(drawingPoint.y());
+	ui.label_for_TempImg->showPartImage();
 }
