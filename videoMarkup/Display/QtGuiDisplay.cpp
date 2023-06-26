@@ -22,10 +22,15 @@ QtGuiDisplay::QtGuiDisplay(QWidget *parent):
 	connect(ui.label_for_TempImg, &myLabel::mouseRelease, this, &QtGuiDisplay::slot_mouseRelease);
 
 	setAttribute(Qt::WA_DeleteOnClose);
+	
+	///del///
+	figuresForDrawing_.push_back(CreateRectangel(10, 10, 100, 100));
 }
 
 QtGuiDisplay::~QtGuiDisplay()
 {
+	for (auto& figure : figuresForDrawing_)
+		figure->Delete();
 }
 
 void QtGuiDisplay::slot_mouvePixmap()
@@ -39,7 +44,35 @@ void QtGuiDisplay::slot_mouseCurrentPos()
 {
 	if (!frame_.frameIsNull())
 	{
-		if (moveImage_)
+		QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
+		if (canChangesFigure_)
+		{
+			prepareForModifyFigure_ = -1;
+			cursorOnDisplay_.setShape(Qt::ArrowCursor);
+			if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
+				prepareForModifyFigure_ = getFigureIndexPrepareForModify(cursorPosition);
+
+			if (prepareForModifyFigure_ > -1)
+				cursorOnDisplay_.setShape(determenateCursorViewOnFigure(figuresForDrawing_[prepareForModifyFigure_], cursorPosition));
+
+			setCursor(cursorOnDisplay_);
+		}
+		else if (figureIsChanging_)
+		{
+			QSize imageSize(ui.label_for_TempImg->getOriginalImageSize());
+			if (cursorOnDisplay_.shape() == Qt::SizeVerCursor || cursorOnDisplay_.shape() == Qt::SizeHorCursor ||
+				cursorOnDisplay_.shape() == Qt::SizeBDiagCursor || cursorOnDisplay_.shape() == Qt::SizeFDiagCursor)
+			{
+				figuresForDrawing_[activFigure_]->resize(cursorPosition, imageSize);
+			}
+			else if (cursorOnDisplay_.shape() == Qt::SizeAllCursor)
+			{
+				figuresForDrawing_[activFigure_]->move(ui.label_for_TempImg->getDeltaOnImageCoordinate(), imageSize);
+			}
+			ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[activFigure_]);
+			ui.label_for_TempImg->showPartImage();
+		}
+		else if (canMoveImage_)
 		{
 			ui.label_for_TempImg->moveIamge();
 			QPoint drawingPoint{ ui.label_for_TempImg->getDrawingPoint() };
@@ -52,12 +85,31 @@ void QtGuiDisplay::slot_mouseCurrentPos()
 
 void QtGuiDisplay::slot_mousePressed()
 {
-	moveImage_ = true;
+	canChangesFigure_ = false;
+	QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
+	if (cursorOnDisplay_.shape() == Qt::ArrowCursor)
+	{
+		if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
+		{
+			setCursor(Qt::ClosedHandCursor);
+			canMoveImage_ = true;
+		}
+	}
+	else if(cursorOnDisplay_.shape() == Qt::SizeVerCursor || cursorOnDisplay_.shape() == Qt::SizeHorCursor ||
+			cursorOnDisplay_.shape() == Qt::SizeBDiagCursor || cursorOnDisplay_.shape() == Qt::SizeFDiagCursor || cursorOnDisplay_.shape() == Qt::SizeAllCursor)
+	{
+		figuresForDrawing_[prepareForModifyFigure_]->prepareForModify(cursorPosition);
+		activFigure_ = prepareForModifyFigure_;
+		figureIsChanging_ = true;
+	}
 }
 
 void QtGuiDisplay::slot_mouseRelease()
 {
-	moveImage_ = false;
+	setCursor(Qt::ArrowCursor);
+	canMoveImage_ = false;
+	canChangesFigure_ = true;
+	figureIsChanging_ = false;
 }
 
 void QtGuiDisplay::slot_ZoomImg_In()
@@ -159,6 +211,9 @@ void QtGuiDisplay::setActivFrame(const Frame& activObj)
 	scale_[0] = ui.label_for_TempImg->getNormalImageScale();
 	setScalesBorderingWithNormalScale();
 	slot_ZoomImg_AllLabl();
+
+	///del//
+	ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
 }
 
 void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
@@ -181,7 +236,14 @@ void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
 
 void QtGuiDisplay::drawRectangel()
 {
-	
+	ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
+}
+
+void QtGuiDisplay::deleteRectangel()
+{
+	for (auto& figure : figuresForDrawing_)
+		figure->Delete();
+	figuresForDrawing_.clear();
 }
 
 QRect QtGuiDisplay::getLabelRect()
@@ -280,4 +342,43 @@ void QtGuiDisplay::setSizeScrollBar()
 	{
 		ui.verSB_forTempImg->hide();
 	}
+}
+
+Qt::CursorShape QtGuiDisplay::determenateCursorViewOnFigure(const IFigure* figure, const QPoint& position)
+{
+	Qt::CursorShape cursorView{ Qt::ArrowCursor };
+	
+	if (figure->contains(position))
+		cursorView = Qt::SizeAllCursor;
+
+	if (figure->isUpperCenterBorder(position) || figure->isBottomCenterBorder(position))
+		cursorView = Qt::SizeVerCursor;
+	else if (figure->isRightCenterBorder(position) || figure->isLeftCenterBorder(position))
+		cursorView = Qt::SizeHorCursor;
+	else if (figure->isUpperRightBorder(position) || figure->isBottomLeftBorder(position))
+		cursorView = Qt::SizeBDiagCursor;
+	else if (figure->isBottomRightBorder(position) || figure->isUpperLeftBorder(position))
+		cursorView = Qt::SizeFDiagCursor;
+	
+	return cursorView;
+}
+
+int QtGuiDisplay::getFigureIndexPrepareForModify(const QPoint& position)
+{
+	int smallestFigureIndex{ -1 };
+	for (int i{}; i < figuresForDrawing_.size(); ++i)
+	{
+		Qt::CursorShape newShape{};
+		if (smallestFigureIndex == -1)
+		{
+			if (figuresForDrawing_[i]->containsToModifyArea(position))
+				smallestFigureIndex = i;
+		}
+		else if (figuresForDrawing_[i]->getArea() <= figuresForDrawing_[smallestFigureIndex]->getArea())
+		{
+			if (figuresForDrawing_[i]->containsToModifyArea(position))
+				smallestFigureIndex = i;
+		}
+	}
+	return smallestFigureIndex;
 }

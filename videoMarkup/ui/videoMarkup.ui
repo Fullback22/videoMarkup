@@ -263,7 +263,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,1,10">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,0,10">
         <item>
          <widget class="QPushButton" name="pb_nextFrame">
           <property name="enabled">
@@ -288,18 +288,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="le_activFrameNumber">
-          <property name="maximumSize">
-           <size>
-            <width>54</width>
-            <height>16777215</height>
-           </size>
-          </property>
+         <widget class="QLabel" name="label_activFrameNumber">
           <property name="text">
-           <string>0</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
+           <string/>
           </property>
          </widget>
         </item>

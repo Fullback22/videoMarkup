@@ -5,6 +5,9 @@ videoMarkup::videoMarkup(QWidget *parent)
 {
     ui.setupUi(this);
 
+    setAttribute(Qt::WA_DeleteOnClose);
+    ui.widgetFrame->setActivFrame(Frame());
+
     connect(ui.openVideo, &QAction::triggered, this, &videoMarkup::slot_loadVideo);
 
     connect(ui.createActionClassifier, &QAction::triggered, this, &videoMarkup::slot_createActionsClassifier);
@@ -18,7 +21,12 @@ videoMarkup::videoMarkup(QWidget *parent)
     connect(ui.openObjectClassifier, &QAction::triggered, this, &videoMarkup::slot_loadObjectClassifier);
 
     connect(ui.pb_nextFrame, &QPushButton::clicked, this, &videoMarkup::slot_nextFrame);
-    ui.widgetFrame->setActivFrame(Frame());
+
+    ///del
+    objectClassifier_.addValue("Объект1");
+    actionClassifier_.addValue("Действие1");
+    updateComboBoxAction();
+    updateComboBoxObject();
 }
 
 videoMarkup::~videoMarkup()
@@ -29,9 +37,7 @@ videoMarkup::~videoMarkup()
 
 void videoMarkup::setActivFrameNumberToForm()
 {
-    ui.le_activFrameNumber->setReadOnly(false);
-    ui.le_activFrameNumber->setText(QString::number(activFrameNumber_ + 1));
-    ui.le_activFrameNumber->setReadOnly(true);
+    ui.label_activFrameNumber->setText(QString::number(activFrameNumber_ + 1));
 }
 
 void videoMarkup::updateComboBoxAction()
@@ -43,6 +49,7 @@ void videoMarkup::updateComboBoxAction()
         ui.cb_newObjectAction->addItem(QString::fromLocal8Bit(actionClassifier_[i].c_str()));
         ui.cb_odjectAction->addItem(QString::fromLocal8Bit(actionClassifier_[i].c_str()));
     }
+    updatePbAddObjectStatus();
 }
 
 void videoMarkup::updateComboBoxObject()
@@ -54,6 +61,17 @@ void videoMarkup::updateComboBoxObject()
         ui.cb_newObjectClass->addItem(QString::fromLocal8Bit(objectClassifier_[i].c_str()));
         ui.cb_objectClass->addItem(QString::fromLocal8Bit(objectClassifier_[i].c_str()));
     }
+    updatePbAddObjectStatus();
+}
+
+void videoMarkup::updatePbAddObjectStatus()
+{
+    size_t quantityObjectsType{ objectClassifier_.size() };
+    size_t quantityActionsType{ actionClassifier_.size() };
+    if (videoFile_.isOpened() && quantityObjectsType > 0 && quantityActionsType > 0)
+        ui.pb_addObject->setEnabled(true);
+    else
+        ui.pb_addObject->setDisabled(true);
 }
 
 void videoMarkup::slot_nextFrame()
@@ -80,6 +98,11 @@ void videoMarkup::slot_nextFrame()
         activFrameNumber_ = 0;
     }
     setActivFrameNumberToForm();
+}
+
+void videoMarkup::slot_addObject()
+{
+    
 }
 
 void videoMarkup::slot_createActionsClassifier()
@@ -198,4 +221,5 @@ void videoMarkup::slot_loadVideo()
         }
         setActivFrameNumberToForm();
     }
+    updatePbAddObjectStatus();
 }

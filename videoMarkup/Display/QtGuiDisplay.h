@@ -14,15 +14,20 @@ class QtGuiDisplay : public QWidget
 	Q_OBJECT
 protected:
 	Frame frame_{};
-	
+	QCursor cursorOnDisplay_{ Qt::ArrowCursor };
+
 	float scale_[10]{ 1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5 };
 	size_t activScale_{ 0 };
 	size_t scaleFollowingNormalScale_{ 10 };
 	size_t scalePreviousToNormalScale_{ 0 };
 	
-	bool moveImage_{ false };
-	//std::vector<IFigure> figuresForDrawing_;
-	size_t activFigure{};
+	bool canMoveImage_{ false };
+	bool canChangesFigure_{ true };
+	bool figureIsChanging_{ false };
+
+	std::vector<IFigure*> figuresForDrawing_;
+	int activFigure_{ -1 };
+	int prepareForModifyFigure_{ -1 };
 
 
 public:
@@ -33,6 +38,7 @@ public:
 	void setEnableWidtsGrouBox(bool enable);
 	
 	void drawRectangel();
+	void deleteRectangel();
 
 	QRect getLabelRect();
 	void changeImgFormat(ImageFormat formatType);
@@ -56,4 +62,6 @@ protected slots:
 protected:
 	void setScalesBorderingWithNormalScale();
 	void setSizeScrollBar();
+	Qt::CursorShape determenateCursorViewOnFigure(const IFigure* figure, const QPoint& position);
+	int getFigureIndexPrepareForModify(const QPoint& position);
 };

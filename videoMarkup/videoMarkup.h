@@ -31,9 +31,11 @@ private:
     void setActivFrameNumberToForm();
     void updateComboBoxAction();
     void updateComboBoxObject();
+    void updatePbAddObjectStatus();
 protected slots:
     void slot_loadVideo();
     void slot_nextFrame();
+    void slot_addObject();
     
     void slot_createActionsClassifier();
     void slot_updateActionsClassifier();

@@ -54,15 +54,16 @@ public:
 	void setFormatImage(ImageFormat formatType = ImageFormat::ORIGINAL);
 
 	void drawPicture(const QImage& drawPicture, const QRect& limitRect);
-	void drawStaticFigure(const IFigure& figure);
-	void drawStaticFigure(const std::vector<IFigure>& figures);
-	void drawDynamicFigure(const IFigure& figure);
+	void drawStaticFigure(const IFigure* figure);
+	void drawStaticFigure(const std::vector<IFigure*>& figures);
+	void drawDynamicFigure(const IFigure* figure);
 	void clearImageFromFigure();
 	
 	void convertPointToImageCoordinate(QPoint& targetPoint) const;
 	QPoint getDrawingPoint() const;
 	QPoint getCursorPositionOnLabel() const;
 	QPoint getCursorPositionOnImage() const;
+	QPoint& getDeltaOnImageCoordinate();
 
 	QSize getPreviousImageSize() const;
 	QSize getScaledImageSize() const;

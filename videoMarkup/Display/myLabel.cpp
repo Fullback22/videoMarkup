@@ -156,23 +156,23 @@ void myLabel::drawPicture(const QImage& drawPicture, const QRect& limitRect)
 	delete painter;
 }
 
-void myLabel::drawStaticFigure(const IFigure& figure)
+void myLabel::drawStaticFigure(const IFigure* figure)
 {
-	figure.draw(imageWithStaticFigure_);
+	figure->draw(imageWithStaticFigure_);
 	curentImage_ = imageWithStaticFigure_.copy();
 }
 
-void myLabel::drawStaticFigure(const std::vector<IFigure>& figures)
+void myLabel::drawStaticFigure(const std::vector<IFigure*>& figures)
 {
-	for(const IFigure& figure:figures)
-		figure.draw(imageWithStaticFigure_);
+	for(const IFigure* figure:figures)
+		figure->draw(imageWithStaticFigure_);
 	curentImage_ = imageWithStaticFigure_.copy();
 }
 
-void myLabel::drawDynamicFigure(const IFigure& figure)
+void myLabel::drawDynamicFigure(const IFigure* figure)
 {
 	curentImage_ = imageWithStaticFigure_.copy();
-	figure.draw(curentImage_);
+	figure->draw(curentImage_);
 }
 
 void myLabel::clearImageFromFigure()
@@ -184,35 +184,27 @@ void myLabel::clearImageFromFigure()
 void myLabel::convertPointToImageCoordinate(QPoint& targetPoint) const
 {
 	int outputX{ static_cast<int>(targetPoint.x() / imageScale_) };
-	if (imageScale_ > normalImageScale_)
+	if (width() < scaledImageSize_.width())
 	{
 		outputX += drawingPoint_.x();
 	}
 	else
 	{
-		outputX -= (width() - scaledImageSize_.width()) / 2;
+		outputX = (targetPoint.x() - (width() - scaledImageSize_.width()) / 2) / imageScale_;
 	}
 
-	if (outputX >= scaledImageSize_.width())
-		outputX = scaledImageSize_.width() - 1;
-	else if (outputX <= 0)
-		outputX = 0;
 	targetPoint.setX(outputX);
 
 	int outputY{ static_cast<int>(targetPoint.y() / imageScale_) };
-	if (imageScale_ > normalImageScale_)
+	if (height() < scaledImageSize_.height())
 	{
 		outputY += drawingPoint_.y();
 	}
 	else
 	{
-		outputY -= (height() - scaledImageSize_.height()) / 2;
+		outputY = (targetPoint.y() - (height() - scaledImageSize_.height()) / 2) / imageScale_;
 	}
 
-	if (outputY > scaledImageSize_.height())
-		outputY = scaledImageSize_.height() - 1;
-	else if (outputY < 0)
-		outputY = 0;
 	targetPoint.setY(outputY);
 }
 
@@ -231,6 +223,23 @@ QPoint myLabel::getCursorPositionOnImage() const
 	QPoint cursorPosition{ cursorPosition_ };
 	convertPointToImageCoordinate(cursorPosition);
 	return cursorPosition;
+}
+
+QPoint& myLabel::getDeltaOnImageCoordinate()
+{
+	int dx{ static_cast<int>((cursorPosition_.x() - firstCursorPosition_.x()) / imageScale_) };
+	int dy{ static_cast<int>((cursorPosition_.y() - firstCursorPosition_.y()) / imageScale_) };
+	QPoint delta{ dx, dy };
+
+	if (dx != 0)
+	{
+		firstCursorPosition_.setX(cursorPosition_.x());
+	}
+	if (dy != 0 )
+	{
+		firstCursorPosition_.setY(cursorPosition_.y());
+	}
+	return delta;
 }
 
 QSize myLabel::getPreviousImageSize() const
