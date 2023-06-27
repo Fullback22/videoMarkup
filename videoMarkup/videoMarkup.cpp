@@ -1,7 +1,8 @@
 #include "videoMarkup.h"
 
 videoMarkup::videoMarkup(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow{ parent },
+    markupObjects{ 0 }
 {
     ui.setupUi(this);
 
@@ -100,9 +101,9 @@ void videoMarkup::slot_nextFrame()
     setActivFrameNumberToForm();
 }
 
-void videoMarkup::slot_addObject()
+void videoMarkup::slot_addMarkupObject()
 {
-    
+    markupObjects.push_back
 }
 
 void videoMarkup::slot_createActionsClassifier()

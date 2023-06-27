@@ -101,6 +101,7 @@
     <QtMoc Include="videoMarkup.h" />
     <ClCompile Include="Display\myLabel.cpp" />
     <ClCompile Include="Display\QtGuiDisplay.cpp" />
+    <ClCompile Include="MarkupObject.cpp" />
     <ClCompile Include="videoMarkup.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -117,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classifier\Classifier.h" />
+    <ClInclude Include="MarkupObject.h" />
     <QtMoc Include="Classifier\QtGuiClassifier.h" />
     <ClInclude Include="Figure\FigureRectangle.h" />
     <ClInclude Include="Figure\IFigure.h" />

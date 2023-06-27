@@ -6,6 +6,7 @@
 
 #include "Display/QtGuiDisplay.h"
 #include "Classifier/QtGuiClassifier.h"
+#include"MarkupObject.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -28,6 +29,8 @@ private:
     Classifier actionClassifier_{};
     Classifier objectClassifier_{};
 
+    std::vector<MarkupObject> markupObjects;
+
     void setActivFrameNumberToForm();
     void updateComboBoxAction();
     void updateComboBoxObject();
@@ -35,7 +38,7 @@ private:
 protected slots:
     void slot_loadVideo();
     void slot_nextFrame();
-    void slot_addObject();
+    void slot_addMarkupObject();
     
     void slot_createActionsClassifier();
     void slot_updateActionsClassifier();

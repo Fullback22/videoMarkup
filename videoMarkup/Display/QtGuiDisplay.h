@@ -64,4 +64,7 @@ protected:
 	void setSizeScrollBar();
 	Qt::CursorShape determenateCursorViewOnFigure(const IFigure* figure, const QPoint& position);
 	int getFigureIndexPrepareForModify(const QPoint& position);
+	void modifyFigure();
+	void preparationForModifyFigure();
+	void moveImage();
 };

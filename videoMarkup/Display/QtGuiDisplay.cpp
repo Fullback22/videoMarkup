@@ -1,8 +1,8 @@
 #include "QtGuiDisplay.h"
 
 QtGuiDisplay::QtGuiDisplay(QWidget *parent): 
-	QWidget(parent)
-	//figuresForDrawing_(0)
+	QWidget(parent),
+	figuresForDrawing_(0)
 {
 	ui.setupUi(this);
 
@@ -22,15 +22,11 @@ QtGuiDisplay::QtGuiDisplay(QWidget *parent):
 	connect(ui.label_for_TempImg, &myLabel::mouseRelease, this, &QtGuiDisplay::slot_mouseRelease);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	
-	///del///
-	figuresForDrawing_.push_back(CreateRectangel(10, 10, 100, 100));
 }
 
 QtGuiDisplay::~QtGuiDisplay()
 {
-	for (auto& figure : figuresForDrawing_)
-		figure->Delete();
+	deleteRectangel();
 }
 
 void QtGuiDisplay::slot_mouvePixmap()
@@ -49,9 +45,7 @@ void QtGuiDisplay::slot_mouseCurrentPos()
 		else if (figureIsChanging_)
 			modifyFigure();
 		else if (canMoveImage_)
-		{
-			
-		}
+			moveImage();
 	}
 }
 
@@ -61,7 +55,8 @@ void QtGuiDisplay::slot_mousePressed()
 	QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
 	if (cursorOnDisplay_.shape() == Qt::ArrowCursor)
 	{
-		if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
+		QSize imageSize(ui.label_for_TempImg->getOriginalImageSize());
+		if (cursorPosition.x() > 0 && cursorPosition.y() > 0 && cursorPosition.x() < imageSize.width() && cursorPosition.y() < imageSize.height())
 		{
 			setCursor(Qt::ClosedHandCursor);
 			canMoveImage_ = true;
@@ -183,9 +178,6 @@ void QtGuiDisplay::setActivFrame(const Frame& activObj)
 	scale_[0] = ui.label_for_TempImg->getNormalImageScale();
 	setScalesBorderingWithNormalScale();
 	slot_ZoomImg_AllLabl();
-
-	///del//
-	ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
 }
 
 void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
@@ -208,7 +200,7 @@ void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
 
 void QtGuiDisplay::drawRectangel()
 {
-	ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
+	//ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
 }
 
 void QtGuiDisplay::deleteRectangel()
@@ -376,9 +368,10 @@ void QtGuiDisplay::modifyFigure()
 void QtGuiDisplay::preparationForModifyFigure()
 {
 	QPoint cursorPosition{ ui.label_for_TempImg->getCursorPositionOnImage() };
+	QSize imageSize{ ui.label_for_TempImg->getOriginalImageSize() };
 	prepareForModifyFigure_ = -1;
 	cursorOnDisplay_.setShape(Qt::ArrowCursor);
-	if (cursorPosition.x() > 0 && cursorPosition.y() > 0)
+	if (cursorPosition.x() > 0 && cursorPosition.y() > 0 && cursorPosition.x() < imageSize.width() && cursorPosition.y() < imageSize.height())
 		prepareForModifyFigure_ = getFigureIndexPrepareForModify(cursorPosition);
 
 	if (prepareForModifyFigure_ > -1)

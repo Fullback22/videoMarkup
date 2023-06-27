@@ -67,6 +67,9 @@
     <ClCompile Include="Classifier\QtGuiClassifier.cpp">
       <Filter>Classifier</Filter>
     </ClCompile>
+    <ClCompile Include="MarkupObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ui\QtGuiDisplay.ui">
@@ -102,6 +105,9 @@
     </ClInclude>
     <ClInclude Include="Classifier\Classifier.h">
       <Filter>Classifier</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkupObject.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

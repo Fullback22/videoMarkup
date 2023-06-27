@@ -54,4 +54,5 @@ public:
     float getHeidth() const;
 
     friend IFigure* CreateRectangel(float const x, float const y, float const width, float const heidth);
+    friend FigureRectangle* Rectangel(float const x, float const y, float const width, float const heidth);
 };

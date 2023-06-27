@@ -329,4 +329,8 @@ float FigureRectangle::getHeidth() const
 IFigure* CreateRectangel(float const x, float const y, float const width, float const heidth)
 {
 	return static_cast<IFigure*>(new FigureRectangle(x, y, width, heidth));
-} 
+}
+FigureRectangle* Rectangel(float const x, float const y, float const width, float const heidth)
+{
+	return new FigureRectangle(x, y, width, heidth);
+}
