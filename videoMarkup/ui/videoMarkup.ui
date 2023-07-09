@@ -354,6 +354,9 @@
     <addaction name="openVideo"/>
    </widget>
    <widget class="QMenu" name="markupMenu">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Разметка</string>
     </property>

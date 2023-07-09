@@ -10,5 +10,6 @@ public:
 	FigureRectangle* position{};
 	
 	MarkupObject();
+	~MarkupObject();
 };
 

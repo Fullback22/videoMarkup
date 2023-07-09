@@ -37,8 +37,7 @@ public:
 	void setActivFrame(const Frame& activObj);
 	void setEnableWidtsGrouBox(bool enable);
 	
-	void drawRectangel();
-	void deleteRectangel();
+	void addRectangel(FigureRectangle* rectangel);
 
 	QRect getLabelRect();
 	void changeImgFormat(ImageFormat formatType);
@@ -46,6 +45,10 @@ public:
 	void updateFrame(const Frame& activObj);
 	void resizeEvent(QResizeEvent* event);
 
+	void setActivFigure(unsigned int const index);
+	void deleteFigure(int const index);
+
+	void updateImage();
 private:
 	Ui::QtGuiDisplay ui;
 
@@ -57,7 +60,6 @@ protected slots:
 	void slot_ZoomImg_In();
 	void slot_ZoomImg_Out();
 	void slot_ZoomImg_AllLabl();
-	void slot_updateImg();
 
 protected:
 	void setScalesBorderingWithNormalScale();
@@ -67,4 +69,8 @@ protected:
 	void modifyFigure();
 	void preparationForModifyFigure();
 	void moveImage();
+	void drawAllFigure();
+
+signals:
+	void newActivFigure(int index);
 };

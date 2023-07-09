@@ -4,3 +4,8 @@ MarkupObject::MarkupObject()
 {
 	position = Rectangel(0, 0, 0, 0);
 }
+
+MarkupObject::~MarkupObject()
+{
+
+}

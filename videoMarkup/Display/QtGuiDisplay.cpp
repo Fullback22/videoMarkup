@@ -26,7 +26,6 @@ QtGuiDisplay::QtGuiDisplay(QWidget *parent):
 
 QtGuiDisplay::~QtGuiDisplay()
 {
-	deleteRectangel();
 }
 
 void QtGuiDisplay::slot_mouvePixmap()
@@ -65,8 +64,9 @@ void QtGuiDisplay::slot_mousePressed()
 	else if(cursorOnDisplay_.shape() == Qt::SizeVerCursor || cursorOnDisplay_.shape() == Qt::SizeHorCursor ||
 			cursorOnDisplay_.shape() == Qt::SizeBDiagCursor || cursorOnDisplay_.shape() == Qt::SizeFDiagCursor || cursorOnDisplay_.shape() == Qt::SizeAllCursor)
 	{
+		setActivFigure(prepareForModifyFigure_);
 		figuresForDrawing_[prepareForModifyFigure_]->prepareForModify(cursorPosition);
-		activFigure_ = prepareForModifyFigure_;
+		emit newActivFigure(activFigure_);
 		figureIsChanging_ = true;
 	}
 }
@@ -198,16 +198,27 @@ void QtGuiDisplay::setEnableWidtsGrouBox(bool enable)
 	}
 }
 
-void QtGuiDisplay::drawRectangel()
+void QtGuiDisplay::addRectangel(FigureRectangle* rectangel)
 {
-	//ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[0]);
-}
+	int w{ 0 };
+	int h{ 0 };
+	QSize scaledImageSize{ ui.label_for_TempImg->getScaledImageSize() };
+	QSize labelSize{ ui.label_for_TempImg->size() };
+	if (scaledImageSize.width() <= labelSize.width())
+		w = scaledImageSize.width() / 4;
+	else
+		w = labelSize.width() / 4 / scale_[activScale_];
 
-void QtGuiDisplay::deleteRectangel()
-{
-	for (auto& figure : figuresForDrawing_)
-		figure->Delete();
-	figuresForDrawing_.clear();
+	if (scaledImageSize.height() <= labelSize.height())
+		h = scaledImageSize.height() / 4;
+	else
+		h = labelSize.height() / 4 / scale_[activScale_];
+
+	QPoint drawingRectangelPoint{ labelSize.width() / 2,  labelSize.height() / 2 };
+	ui.label_for_TempImg->convertPointToImageCoordinate(drawingRectangelPoint);
+
+	rectangel->setRectangle(drawingRectangelPoint.x() - w / 2, drawingRectangelPoint.y() - h / 2, w, h);
+	figuresForDrawing_.push_back(static_cast<IFigure*>(rectangel));
 }
 
 QRect QtGuiDisplay::getLabelRect()
@@ -226,8 +237,9 @@ void QtGuiDisplay::changeImgFormat(ImageFormat formatType)
 	ui.label_for_TempImg->setFormatImage(formatType);
 }
 
-void QtGuiDisplay::slot_updateImg()
+void QtGuiDisplay::updateImage()
 {
+	drawAllFigure();
 	ui.label_for_TempImg->showPartImage();
 }
 
@@ -261,6 +273,26 @@ void QtGuiDisplay::resizeEvent(QResizeEvent* event)
 		slot_ZoomImg_AllLabl();
 	else
 		setSizeScrollBar();
+}
+
+void QtGuiDisplay::setActivFigure(unsigned int const index)
+{
+	if (index < figuresForDrawing_.size())
+	{
+		activFigure_ = index;
+		drawAllFigure();
+		ui.label_for_TempImg->showPartImage();
+	}
+}
+
+void QtGuiDisplay::deleteFigure(int const index)
+{
+	if (index < figuresForDrawing_.size())
+		figuresForDrawing_.erase(figuresForDrawing_.begin() + index);
+	if (index == activFigure_)
+		activFigure_ = 0;
+	if (figuresForDrawing_.size() == 0)
+		activFigure_ = -1;
 }
 
 void QtGuiDisplay::setScalesBorderingWithNormalScale()
@@ -387,4 +419,16 @@ void QtGuiDisplay::moveImage()
 	ui.horSB_forTempImg->setValue(drawingPoint.x());
 	ui.verSB_forTempImg->setValue(drawingPoint.y());
 	ui.label_for_TempImg->showPartImage();
+}
+
+void QtGuiDisplay::drawAllFigure()
+{
+	ui.label_for_TempImg->clearImageFromFigure();
+	if (figuresForDrawing_.size() > 0)
+	{
+		std::vector<IFigure*> staticFigure(figuresForDrawing_);
+		staticFigure.erase(staticFigure.begin() + activFigure_);
+		ui.label_for_TempImg->drawStaticFigure(staticFigure);
+		ui.label_for_TempImg->drawDynamicFigure(figuresForDrawing_[activFigure_]);
+	}
 }
