@@ -295,10 +295,18 @@ const QPixmap& myLabel::getOrignalImage() const
 void myLabel::setNormalImageScale()
 {
 	float previousNormalScale{ normalImageScale_ };
-	if (originalImageSize_.width() >= originalImageSize_.height())
+	if (originalImageSize_.width() >= originalImageSize_.height()) 
+	{
 		normalImageScale_ = static_cast<float>(width()) / originalImageSize_.width();
-	else
+		if (static_cast<int>(originalImageSize_.height() * normalImageScale_) > height())
+			normalImageScale_ = static_cast<float>(height()) / originalImageSize_.height();
+	}
+	else 
+	{
 		normalImageScale_ = static_cast<float>(height()) / originalImageSize_.height();
+		if (static_cast<int>(originalImageSize_.width() * normalImageScale_) > width())
+			normalImageScale_ = static_cast<float>(width()) / originalImageSize_.width();
+	}
 	if (imageScale_ == previousNormalScale)
 	{
 		imageScale_ = normalImageScale_;

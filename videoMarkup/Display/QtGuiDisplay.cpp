@@ -250,6 +250,7 @@ void QtGuiDisplay::updateFrame(const Frame& activObj)
 	scale_[0] = ui.label_for_TempImg->getNormalImageScale();
 	
 	setSizeScrollBar();
+	drawAllFigure();
 	ui.label_for_TempImg->showPartImage();
 	if (!ui.pb_allWindow->isEnabled())
 		slot_ZoomImg_AllLabl();
