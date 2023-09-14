@@ -227,8 +227,8 @@ QPoint myLabel::getCursorPositionOnImage() const
 
 QPoint& myLabel::getDeltaOnImageCoordinate()
 {
-	int dx{ static_cast<int>((cursorPosition_.x() - firstCursorPosition_.x()) / imageScale_) };
-	int dy{ static_cast<int>((cursorPosition_.y() - firstCursorPosition_.y()) / imageScale_) };
+	int dx{ static_cast<int>(round((cursorPosition_.x() - firstCursorPosition_.x()) / imageScale_)) };
+	int dy{ static_cast<int>(round((cursorPosition_.y() - firstCursorPosition_.y()) / imageScale_)) };
 	QPoint delta{ dx, dy };
 
 	if (dx != 0)

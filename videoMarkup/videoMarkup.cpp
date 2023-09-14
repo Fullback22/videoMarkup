@@ -31,12 +31,12 @@ videoMarkup::videoMarkup(QWidget *parent)
     connect(ui.widgetFrame, &QtGuiDisplay::newActivFigure, this, &videoMarkup::slot_setActivMarkupObject);
 
     ///del
-    objectClassifier_.addValue("Объект1");
-    objectClassifier_.addValue("Объект2");
-    actionClassifier_.addValue("Действие1");
-    actionClassifier_.addValue("Действие2");
-    updateComboBoxAction();
-    updateComboBoxObject();
+    //objectClassifier_.addValue("Объект1");
+    //objectClassifier_.addValue("Объект2");
+    //actionClassifier_.addValue("Действие1");
+    //actionClassifier_.addValue("Действие2");
+    //updateComboBoxAction();
+    //updateComboBoxObject();
     
     //setAttribute(Qt::WA_DeleteOnClose);
 }
