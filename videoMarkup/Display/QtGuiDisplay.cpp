@@ -77,6 +77,7 @@ void QtGuiDisplay::slot_mouseRelease()
 	canMoveImage_ = false;
 	canChangesFigure_ = true;
 	figureIsChanging_ = false;
+	slot_mouseCurrentPos();
 }
 
 void QtGuiDisplay::slot_ZoomImg_In()

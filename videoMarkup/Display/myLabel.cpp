@@ -225,7 +225,7 @@ QPoint myLabel::getCursorPositionOnImage() const
 	return cursorPosition;
 }
 
-QPoint& myLabel::getDeltaOnImageCoordinate()
+QPoint myLabel::getDeltaOnImageCoordinate()
 {
 	int dx{ static_cast<int>(round((cursorPosition_.x() - firstCursorPosition_.x()) / imageScale_)) };
 	int dy{ static_cast<int>(round((cursorPosition_.y() - firstCursorPosition_.y()) / imageScale_)) };

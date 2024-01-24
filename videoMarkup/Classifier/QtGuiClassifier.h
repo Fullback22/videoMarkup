@@ -4,7 +4,7 @@
 #include <qtextcodec.h>
 #include <qstring.h>
 #include <qmessagebox.h>
-#include "ui_QtGuiClassifire.h"
+#include "../x64/Release/uic/ui_QtGuiClassifier.h"
 
 #include "Classifier.h"
 

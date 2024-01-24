@@ -63,7 +63,7 @@ public:
 	QPoint getDrawingPoint() const;
 	QPoint getCursorPositionOnLabel() const;
 	QPoint getCursorPositionOnImage() const;
-	QPoint& getDeltaOnImageCoordinate();
+	QPoint getDeltaOnImageCoordinate();
 
 	QSize getPreviousImageSize() const;
 	QSize getScaledImageSize() const;
